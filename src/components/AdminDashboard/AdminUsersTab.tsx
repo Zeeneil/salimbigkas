@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { dogetAllUsers } from "../../api/functions";
-import man from '../../assets/man.svg';
+// import React, { useEffect, useState } from "react";
+// import { dogetAllUsers } from "../../api/functions";
+// import man from '../../assets/man.svg';
 
 const AdminUsersTab = ({ Tab }: { Tab: () => string }) => {
 

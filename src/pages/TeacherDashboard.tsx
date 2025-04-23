@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,7 +16,7 @@ import {
     LogOut,
   } from "lucide-react";
 import { useAuth } from '../hooks/authContext';
-import { doDeleteUser } from '../firebase/auth';
+// import { doDeleteUser } from '../firebase/auth';
 import LogoutModal from "../components/Modals/LogoutModal";
 import woman from '../assets/woman.svg';
 import salimbigkas from '../assets/salimbigkas.svg';
@@ -24,7 +24,7 @@ import { motion } from "framer-motion"
 
 const TeacherDashboard = () => {
 
-  const [password, setPassword] = useState<string>("");
+  // const [password, setPassword] = useState<string>("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -107,18 +107,18 @@ const TeacherDashboard = () => {
   };
 
   // Handle delete account
-  const handleDeleteAccount = () => {
-    setLoading(true);
-    setTimeout(async () => {
-      await doDeleteUser(currentUser?.email || "", password)
-        .then(() => {
-          navigate("/");
-        })
-        .catch((error) => {
-          console.error("Error deleting account:", error);
-        });
-    }, 800);
-  };
+  // const handleDeleteAccount = () => {
+  //   setLoading(true);
+  //   setTimeout(async () => {
+  //     await doDeleteUser(currentUser?.email || "", password)
+  //       .then(() => {
+  //         navigate("/");
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error deleting account:", error);
+  //       });
+  //   }, 800);
+  // };
 
   // Redirect if not authenticated or not an teacher
   useEffect(() => {

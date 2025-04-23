@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import salimbigkas from '../../assets/salimbigkas-poppins.svg';
 
 interface HeaderProps {
@@ -11,19 +11,19 @@ interface HeaderProps {
 
 const Header = ({ openLoginModal, openHomePage, openAboutPage, openFeaturesPage, openContactPage }: HeaderProps) => {
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // const [isDarkMode, setIsDarkMode] = useState(false);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    } else {
-      const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setIsDarkMode(userPrefersDark);
-      document.documentElement.classList.toggle('dark', userPrefersDark);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedTheme = localStorage.getItem('theme');
+  //   if (savedTheme) {
+  //     setIsDarkMode(savedTheme === 'dark');
+  //     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+  //   } else {
+  //     const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  //     setIsDarkMode(userPrefersDark);
+  //     document.documentElement.classList.toggle('dark', userPrefersDark);
+  //   }
+  // }, []);
 
   // Dark mode toggle logic can be added back if needed in the future
 

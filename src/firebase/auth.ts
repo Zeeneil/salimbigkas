@@ -8,7 +8,7 @@ import {
   updatePassword,
   signInWithPopup,
   signInWithRedirect,
-  getRedirectResult,
+  // getRedirectResult,
   GoogleAuthProvider,
   OAuthProvider,
   onAuthStateChanged,
@@ -23,7 +23,7 @@ import {
   setPersistence,
   browserSessionPersistence,
   browserLocalPersistence,
-  UserProfile
+  // UserProfile
 } from 'firebase/auth';
 import {
   serverTimestamp,

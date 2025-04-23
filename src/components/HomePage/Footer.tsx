@@ -1,4 +1,3 @@
-import React from 'react';
 import { Facebook, Twitter, Instagram } from 'lucide-react'; // Import icons from react-icons
 import salimbigkas from '../../assets/salimbigkas-poppins.svg';
 

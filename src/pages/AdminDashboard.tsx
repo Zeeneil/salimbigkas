@@ -1,15 +1,13 @@
 import { useState, useEffect, JSX } from "react"
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   Bell,
   BookOpen,
-  Calendar,
   Home,
   Settings,
-  User,
   Users,
   Mic,
   BarChart,
@@ -18,7 +16,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from '../hooks/authContext';
-import { doDeleteUser } from '../firebase/auth';
+// import { doDeleteUser } from '../firebase/auth';
 import LogoutModal from "../components/Modals/LogoutModal";
 import AdminDashboardTab from "../components/AdminDashboard/AdminDashboardTab";
 import AdminUsersTab from "../components/AdminDashboard/AdminUsersTab";
@@ -30,7 +28,7 @@ import salimbigkas from '../assets/salimbigkas.svg';
 
 const AdminDashboard = () => {
 
-  const [password, setPassword] = useState<string>("");
+  // const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -125,18 +123,18 @@ const AdminDashboard = () => {
   };
 
   // Handle delete account
-  const handleDeleteAccount = () => {
-    setLoading(true);
-    setTimeout(async () => {
-      await doDeleteUser(currentUser?.email || "", password)
-        .then(() => {
-          navigate("/");
-        })
-        .catch((error) => {
-          console.error("Error deleting account:", error);
-        });
-    }, 800);
-  };
+  // const handleDeleteAccount = () => {
+  //   setLoading(true);
+  //   setTimeout(async () => {
+  //     await doDeleteUser(currentUser?.email || "", password)
+  //       .then(() => {
+  //         navigate("/");
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error deleting account:", error);
+  //       });
+  //   }, 800);
+  // };
 
   // Redirect if not authenticated or not an admin
   useEffect(() => {

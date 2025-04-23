@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from 'react';
 import { useAuth } from '../../hooks/authContext';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { doSignInWithEmailAndPassword, doSignInWithGoogle, doSignInWithGoogleRedirect, doSignInWithFacebook } from '../../firebase/auth';
+import { doSignInWithEmailAndPassword, doSignInWithGoogle, doSignInWithFacebook } from '../../firebase/auth';
 import { Eye, EyeClosed, X, Check, CircleAlert } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import EmailVerificationModal from './EmailVerificationModal';
@@ -59,7 +59,7 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
     e.preventDefault();
     if (!isSigningInWithGoogle) {
       setIsSigningInWithGoogle(true);
-      doSignInWithGoogle().catch(err => {
+      doSignInWithGoogle().catch(() => {
         setIsSigningInWithGoogle(false);
         setErrorMessage('An error occurred while signing in with Google. Please try again.');
       });
@@ -71,7 +71,7 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
     e.preventDefault();
     if (!isSigningInWithFacebook) {
       setisSigningInWithFacebook(true);
-      doSignInWithFacebook().catch(err => {
+      doSignInWithFacebook().catch(() => {
         setisSigningInWithFacebook(false);
         setErrorMessage('An error occurred while signing in with Facebook. Please try again.');
       });

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { doPasswordReset } from '../../firebase/auth';
 import { CircleCheck, CircleAlert } from 'lucide-react';
-import { auth } from '../../firebase/firebase';
-import EmailVerificationModal from './EmailVerificationModal';
+// import { auth } from '../../firebase/firebase';
+// import EmailVerificationModal from './EmailVerificationModal';
 
 interface ForgotPasswordModalProps {
     isOpen: boolean;
@@ -16,7 +16,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
     const [email, setEmail] = useState('');
     const [Message, setMessage] = useState('');
     const [isEmailVerified, setIsEmailVerified] = useState(false);
-    const [showVerificationModal, setShowVerificationModal] = useState(false);
+    // const [showVerificationModal, setShowVerificationModal] = useState(false);
 
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();

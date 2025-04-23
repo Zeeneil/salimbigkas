@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     open: true
   },
-  base: process.env.NODE_ENV === 'production' ? '/salimbigkas-filipino-e-learning-app/' : '/', // Replace with your repo name
+  base: process.env.NODE_ENV === 'production' ? '/salimbigkas/' : '/', // Replace with your repo name
   build: {
     outDir: 'dist',
   },

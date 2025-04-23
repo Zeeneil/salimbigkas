@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import salimbigkas from '../assets/sb-symbol.svg';
 import Header from '../components/HomePage/Header';
 import LoginModal from '../components/Modals/LoginModal';

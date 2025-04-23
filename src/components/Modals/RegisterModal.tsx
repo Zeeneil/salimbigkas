@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/authContext';
-import { doCreateUserWithEmailAndPassword, doSignInWithGoogle, doSignInWithGoogleRedirect, doSignInWithFacebook } from '../../firebase/auth';
+import { doCreateUserWithEmailAndPassword, doSignInWithGoogle, doSignInWithFacebook } from '../../firebase/auth';
 import { Eye, EyeClosed } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -59,7 +59,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
     e.preventDefault();
     if (!isSigningIn) {
       setIsSigningInWithGoogle(true);
-      doSignInWithGoogle().catch(err => {
+      doSignInWithGoogle().catch(() => {
         setIsSigningIn(false);
         setErrorMessage('An error occurred while signing in with Google. Please try again.');
       });
@@ -71,7 +71,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
     e.preventDefault();
     if (!isSigningIn) {
       setisSigningInWithFacebook(true);
-      doSignInWithFacebook().catch(err => {
+      doSignInWithFacebook().catch(() => {
         setIsSigningIn(false);
         setErrorMessage('An error occurred while signing in with Apple. Please try again.');
       });
