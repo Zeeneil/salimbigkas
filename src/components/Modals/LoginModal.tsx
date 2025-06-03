@@ -1,4 +1,5 @@
 import { MouseEvent, useState } from 'react';
+import { auth } from '../../firebase/firebase';
 import { useAuth } from '../../hooks/authContext';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle, doSignInWithFacebook } from '../../firebase/auth';
@@ -7,6 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import EmailVerificationModal from './EmailVerificationModal';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import SignInWithSocials from '../Buttons/SignInWithSocials';
+import { SpinLoadingWhite } from '../Icons/icons';
 
 // Component for the Login Modal
 interface LoginModalProps {
@@ -30,7 +32,7 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
   const navigate = useNavigate();
 
   // Get user authentication state and role from context
-  const { userLoggedIn, currentUser, role } = useAuth();
+  const { userLoggedIn, role } = useAuth();
 
   // Handle email/password login
   const handleLogin = async (e: React.FormEvent) => {
@@ -41,7 +43,7 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
         // Attempt to sign in
         await doSignInWithEmailAndPassword(email, password, rememberMe);
         // After signing in, if the user exists but is not verified, show the verification modal
-        if (currentUser && !currentUser.emailVerified) {
+        if (auth.currentUser && !auth.currentUser.emailVerified) {
           setShowVerificationModal(true);
         }
     } catch (error) {
@@ -52,7 +54,7 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
     } finally {
         setIsSigningIn(false);
     }
-};
+  };
   
   // Function to handle Google sign-in
   const onGoogleSignIn = (e: MouseEvent<HTMLButtonElement>) => {
@@ -117,7 +119,9 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
         {/* Close button */}
         <a
           className="absolute top-3 right-5 text-black text-2xl cursor-pointer"
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+          }}
         >
           &times;
         </a>
@@ -251,11 +255,8 @@ const LoginModal = ({ isOpen, onClose, onSwitch }: LoginModalProps) => {
             className={`w-full mt-6 bg-[#2C3E50] text-white p-4 rounded-lg shadow-md drop-shadow-lg ${isSigningIn ? 'opacity-80 cursor-not-allowed' : 'hover:font-medium hover:border-[#386BF6] hover:bg-[#34495e]'}`}
           >
             {isSigningIn ? 
-              <div className="flex items-center justify-center">
-                <svg className="animate-spin size-5 mr-3 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C6.47715 2 2 6.47715 2 12H5C5 7.58172 8.58172 4 12 4V2Z" fill="currentColor" />
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 16.4183 15.4183 20 12 20V22Z" fill="currentColor" />
-                </svg>
+              <div className="flex items-center justify-center gap-2">
+                <SpinLoadingWhite />
                 Processing...
               </div>
               : 

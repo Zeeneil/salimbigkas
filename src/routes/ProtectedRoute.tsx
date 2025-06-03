@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/authContext';
 // ProtectedRoute component to restrict access based on user role and email verification
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'admin' | 'teacher' | 'student';
+  requiredRole?: 'Admin' | 'Teacher' | 'Student';
   requireVerifiedEmail?: boolean;
 }
 
@@ -25,7 +25,7 @@ const ProtectedRoute = ({ children, requiredRole, requireVerifiedEmail = false }
     }
 
     // Check if the user has the required role
-    if (requiredRole && role !== requiredRole && role !== 'admin') {
+    if (requiredRole && role !== requiredRole && role !== 'Admin') {
         return <Navigate to="/unauthorized" replace />;
     }
 

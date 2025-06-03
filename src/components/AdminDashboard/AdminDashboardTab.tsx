@@ -82,12 +82,13 @@ const AdminDashboardTab = ({ Tab }: { Tab: () => string }) => {
     return (
         <>
             {Tab() === "dashboard" && (
-              <>
+              <div className="p-6 space-y-6">
+                {/* Header section */}
                 <div className="flex items-center justify-between">
                   <h1 className="text-2xl font-bold tracking-tight">
-                    Admin Dashboard
+                    Dashboard
                   </h1>
-                  <button type="button" className="flex items-center gap-2 px-3 py-2 text-sm shadow-sm rounded-sm border border-gray-200 hover:bg-gray-100 focus:text-white focus:bg-[#2C3E50] focus:drop-shadow-lg">
+                  <button type="button" className="flex items-center gap-2 px-3 py-2 text-sm shadow-sm rounded-lg border border-gray-200 hover:bg-gray-100 focus:text-white focus:bg-[#2C3E50] focus:drop-shadow-lg">
                     <Calendar className="mr-2 h-4 w-4" />
                     April 2025
                   </button>
@@ -242,7 +243,7 @@ const AdminDashboardTab = ({ Tab }: { Tab: () => string }) => {
                     ))}
                   </div>
                 </div>
-              </>
+              </div>
             )}
         </>
     );

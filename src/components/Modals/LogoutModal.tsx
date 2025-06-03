@@ -53,14 +53,14 @@ const LogoutModal = ({ isOpen, onClose }: LogoutModalProps) => {
                 <div className="flex justify-center gap-4 mt-4">
                     <button
                         type='button'
-                        className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                         onClick={handleLogout}
                     >
                         Yes
                     </button>
                     <button
                         type='button'
-                        className="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                        className="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
                         onClick={onClose}
                     >
                         No

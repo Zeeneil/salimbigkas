@@ -14,21 +14,24 @@ const HomePage=()=> {
   const openLoginModal = () => {
     setIsModalOpen(true);
     setIsLogin(true);
+    document.body.style.overflow = 'hidden'; // Disable scroll when modal is open
   };
 
   const openRegisterModal = () => {
     setIsModalOpen(true);
     setIsLogin(false);
+    document.body.style.overflow = 'hidden'; // Disable scroll when modal is open
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
   };
 
   return (
     <div className="flex flex-col mx-auto bg-white">
       <div className="w-full sticky top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-[1440px] mx-auto flex justify-center items-center">
+        <nav className="max-w-[1440px] mx-auto flex justify-center items-center">
           <Header 
             openHomePage={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             openAboutPage={() => document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -36,7 +39,7 @@ const HomePage=()=> {
             openContactPage={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             openLoginModal={openLoginModal}  
           />
-        </div>
+        </nav>
       </div>
       <div className="w-full h-[600px] bg-gradient-to-b from-[#e0f2f1] via-[#e0f2f1]/80 to-[#ffffff] shadow-sm rounded-bl-4xl rounded-br-4xl border border-gray-200">
         <div className="max-w-[1440px] mx-auto flex h-full px-40 py-10 gap-10 justify-center items-center">
@@ -49,7 +52,7 @@ const HomePage=()=> {
             <div className="flex flex-col mt-10">
               <button
                 type="button"
-                className="text-white text-[1.2rem] px-15 py-6 rounded-4xl shadow-sm drop-shadow-lg bg-[#2C3E50] hover:bg-[#34495e]"
+                className="text-white text-[1.2rem] px-15 py-6 rounded-lg shadow-sm drop-shadow-lg bg-[#2C3E50] hover:bg-[#34495e]"
               >
                 Simulan ang Pag-aaral
               </button>
@@ -161,7 +164,7 @@ const HomePage=()=> {
           <h2 className="mt-5 text-white/50 text-xl font-medium">Join the Salimbigkas Community</h2>
           <button
             type="button"
-            className="mt-10 px-10 py-5 font-bold text-black bg-white hover:bg-gray-200"
+            className="mt-10 px-10 py-5 font-bold text-black rounded-lg bg-white hover:bg-gray-200"
             onClick={openRegisterModal}
           >
             Get Started Free

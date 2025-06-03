@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../hooks/authContext';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAuth } from '../../hooks/authContext';
 import { doSendEmailVerification } from '../../firebase/auth';
 import { auth } from '../../firebase/firebase';
-import { doSetUserRole } from '../../api/functions';
 
 // Email verification modal to the user.
 const EmailVerificationModal=({ onVerified }: { onVerified: ()=> void}) => {
@@ -11,35 +10,39 @@ const EmailVerificationModal=({ onVerified }: { onVerified: ()=> void}) => {
     // State variables for the component
     const [checkingVerification, setCheckingVerification] = useState(true);
     const [resendMessage, setResendMessage] = useState('');
-    const [timer, setTimer] = useState(0);
+    const [timer, setTimer] = useState(60);
 
     // Check if the user is logged in and has an email
     const { refreshUser } = useAuth();
 
-    // Poll every 5 seconds to check if the email is verified
     useEffect(() => {
+        if (!auth.currentUser) return;
         const interval = setInterval(async () => {
             try {
                 if (auth.currentUser && typeof auth.currentUser.reload === 'function') {
-                    await refreshUser(); // Refresh user to get the latest emailVerified status
-                    if (auth.currentUser?.emailVerified) {
+                    await refreshUser(); // Refresh the user to get the latest data
+                    if (auth.currentUser.emailVerified) {
                         clearInterval(interval);
                         setCheckingVerification(false);
-                        await doSetUserRole(auth.currentUser.uid, 'admin');
-                        onVerified(); // Trigger callback when verified
-
+                        onVerified();
                     }
                 }
-                } catch (error) {
-                    console.error('Error checking email verification:', error);
+            } catch (error) {
+                console.error('Error checking email verification:', error);
             }
         }, 10000);
-      
+    
+        // Stop polling after 5 minutes
+        const timeout = setTimeout(() => {
+            clearInterval(interval);
+            setCheckingVerification(false);
+        }, 300000); // 5 minutes
+    
         return () => {
             clearInterval(interval);
-            setCheckingVerification(false); // Clean up
+            clearTimeout(timeout);
         };
-    }, [auth.currentUser, refreshUser, onVerified]);
+    }, [auth.currentUser,onVerified]);
       
 
     // Timer effect for the "resend" button – for 60 seconds cooldown.

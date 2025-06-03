@@ -39,25 +39,25 @@ function App() {
         <Route path="/" element={<HomePage/>}></Route>
         <Route path="/home" element={<HomePage/>}></Route>
         <Route
-          path="/admin"
+          path="/Admin"
           element={
-            <ProtectedRoute requireVerifiedEmail={true} requiredRole="admin">
+            <ProtectedRoute requireVerifiedEmail={true} requiredRole="Admin">
               <AdminDashboard />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/teacher"
+          path="/Teacher"
           element={
-            <ProtectedRoute requireVerifiedEmail={true} requiredRole="teacher">
+            <ProtectedRoute requireVerifiedEmail={true} requiredRole="Teacher">
               <TeacherDashboard />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/student"
+          path="/Student"
           element={
-            <ProtectedRoute requireVerifiedEmail={true} requiredRole="student">
+            <ProtectedRoute requireVerifiedEmail={true} requiredRole="Student">
               <StudentDashboard />
             </ProtectedRoute>
           }

@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, ReactNode } from 'react';
 import { auth } from '../firebase/firebase';
-import { GoogleAuthProvider, getRedirectResult, User } from 'firebase/auth';
-import { onAuthStateChange } from '../firebase/auth';
+import { onAuthStateChanged, GoogleAuthProvider, User } from 'firebase/auth';
 import { createUserDocumentfromAuth } from '../firebase/auth'; // Import the function to create user document
 import { motion, Variants } from "framer-motion";
 
@@ -39,30 +38,10 @@ export const AuthProvider=({ children }: { children: ReactNode }) => {
   const [isGoogleUser, setIsGoogleUser] = useState(false);
   const [isAppleUser, setIsAppleUser] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
-    const handleAuth = async () => {
-      try {
-        // Step 1: Handle redirect login (if it happened)
-        const redirectResult = await getRedirectResult(auth);
-        if (redirectResult && redirectResult.user) {
-          const user = redirectResult.user;
-          await createUserDocumentfromAuth(user);
-          setCurrentUser(user); // Set the current user
-          setUserLoggedIn(true); // Mark user as logged in
-        }
-
-        // Step 2: Listen for any auth state changes
-        const unsubscribe = onAuthStateChange(initializeUser);
-
-        return unsubscribe;
-      } catch (error) {
-        console.error('Error handling auth state or redirect:', error);
-        setLoading(false);
-      }
-    };
-
-    handleAuth();
+    const unsubscribe = onAuthStateChanged(auth, initializeUser);
+    return unsubscribe;
   }, []);
 
   // Function to initialize user state and fetch additional data
@@ -70,29 +49,18 @@ export const AuthProvider=({ children }: { children: ReactNode }) => {
     try {
       if (user) {
         setCurrentUser(user); // Set the current user
-        // console.log('User logged in:', user);
+        console.log('User logged in:', user);
 
         await user.getIdToken(true);
         const idTokenResult = await user.getIdTokenResult();
-        const roleFromClaims = typeof idTokenResult.claims.role === 'string' ? idTokenResult.claims.role : 'user'; // Default to 'student' if role is not a string
+        const roleFromClaims = typeof idTokenResult.claims.role === 'string' ? idTokenResult.claims.role : null;
         console.log('User role from claims:', roleFromClaims);
+        
         // Check the authentication provider (email, Google, Apple)
-        const isEmail = user.providerData.some(
-          (provider) => provider.providerId === 'password'
-        );
-        setIsEmailUser(isEmail);
-
-        const isGoogle = user.providerData.some(
-          (provider) => provider.providerId === GoogleAuthProvider.PROVIDER_ID
-        );
-        setIsGoogleUser(isGoogle);
-
-        const isApple = user.providerData.some(
-          (provider) => provider.providerId === 'apple.com'
-        );
-        setIsAppleUser(isApple);
-
-        setRole(roleFromClaims); // Set the role from claims
+        setIsEmailUser(user.providerData.some((provider) => provider.providerId === 'password'));
+        setIsGoogleUser(user.providerData.some((provider) => provider.providerId === GoogleAuthProvider.PROVIDER_ID));
+        setIsAppleUser(user.providerData.some((provider) => provider.providerId === 'apple.com'));
+        setRole(roleFromClaims);
         setUserLoggedIn(user.emailVerified); // Mark user as logged in
 
       } else {
@@ -100,24 +68,31 @@ export const AuthProvider=({ children }: { children: ReactNode }) => {
         setCurrentUser(null);
         setUserLoggedIn(false);
         setRole(null);
+        setIsEmailUser(false);
+        setIsGoogleUser(false);
+        setIsAppleUser(false);
       }
     } catch (error) {
       console.error('Error initializing user:', error);
     } finally {
       setLoading(false); // Ensure loading state is updated
     }
-  }
+  };
 
+  // refreshUser function to refresh the user's authentication state and role
   const refreshUser = async () => {
     if (auth.currentUser) {
-      await auth.currentUser.reload(); // Reload the user data
-      await auth.currentUser.getIdToken(true); // Force refresh the token
-      await createUserDocumentfromAuth(auth.currentUser); // Update the user document in Firestore
-      initializeUser(auth.currentUser);
+      try {
+        await auth.currentUser.reload(); // Reload the user to get updated claims
+        const updatedUser = auth.currentUser;
+        await initializeUser(updatedUser);
+        await createUserDocumentfromAuth(updatedUser, {}); // Update user document in Firestore
+      } catch (error) {
+        console.error('Error refreshing user:', error);
+      }
     }
   };
 
-  // Context value to expose authentication state and functions
   const value: AuthContextType = {
     userLoggedIn,
     isEmailUser,
@@ -126,7 +101,7 @@ export const AuthProvider=({ children }: { children: ReactNode }) => {
     currentUser,
     setCurrentUser,
     role,
-    loading, // Expose loading state if needed
+    loading,
     refreshUser,
   };
 

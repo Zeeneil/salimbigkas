@@ -1,6 +1,4 @@
-import { useState, useEffect, JSX } from "react"
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect, JSX } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,24 +9,28 @@ import {
   Users,
   Mic,
   BarChart,
-  Shield,
   Database,
   LogOut,
+  Calendar,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from '../hooks/authContext';
-// import { doDeleteUser } from '../firebase/auth';
+import NavButton from "../components/Buttons/NavButton";
 import LogoutModal from "../components/Modals/LogoutModal";
 import AdminDashboardTab from "../components/AdminDashboard/AdminDashboardTab";
 import AdminUsersTab from "../components/AdminDashboard/AdminUsersTab";
+import ClassesTab from "../components/Class/ClassesTab";
+import AdminAnalyticsTab from "../components/AdminDashboard/AdminAnalyticsTab";
 import AdminPronunciationTab from "../components/AdminDashboard/AdminPronunciationTab";
 import AdminSystemTab from "../components/AdminDashboard/AdminSystemTab";
 
 import man from '../assets/man.svg';
-import salimbigkas from '../assets/salimbigkas.svg';
+import salimbigkas from '../assets/salimbigkas-poppins.svg';
+import symbol from '../assets/sb-symbol.svg';
+import CalendarTab from "../components/Calendar/CalendarTab";
 
 const AdminDashboard = () => {
 
-  // const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -36,17 +38,19 @@ const AdminDashboard = () => {
   // Get current user from auth service
   const { currentUser, role } = useAuth();
 
-  type Tab = "dashboard" | "users" | "courses" | "pronunciation" | "calendar" | "system" | "settings";
+  type Tab = "dashboard" | "users" | "classes" | "pronunciation" | "analytics" | "system" | "schedule" | "Messages" | "settings" ;
   
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
 
   const NavItems: { tab: Tab; label: string; icon: JSX.Element }[] = [
     { tab: "dashboard", label: "Dashboard", icon: <Home size={22} /> },
     { tab: "users", label: "Users", icon: <Users size={22} /> },
-    { tab: "courses", label: "Courses", icon: <BookOpen size={22} /> },
-    { tab: "pronunciation", label: "Pronunciation", icon: <Mic size={22} /> },
-    { tab: "calendar", label: "Analytics", icon: <BarChart size={22} /> },
+    { tab: "classes", label: "Classes", icon: <BookOpen size={22} /> },
+    // { tab: "pronunciation", label: "Pronunciation", icon: <Mic size={22} /> },
+    { tab: "analytics", label: "Analytics", icon: <BarChart size={22} /> },
     { tab: "system", label: "System", icon: <Database size={22} /> },
+    { tab: "schedule", label: "Schedule", icon: <Calendar size={22} /> },
+    { tab: "Messages", label: "Messages", icon: <MessageSquare size={22} /> },
   ];
 
   // Handle tab change with loading animation
@@ -58,35 +62,6 @@ const AdminDashboard = () => {
       setLoading(false);
     }, 100);
   };
-
-  // Navigation button component
-  const NavButton = ({
-    label,
-    icon,
-    onClick,
-    isActive = false,
-  }: {
-    label: string;
-    icon: JSX.Element;
-    onClick: () => void;
-    isActive?: boolean;
-  }) => (
-    <motion.button
-      className={`w-full py-1.5 px-3 rounded-sm focus:text-white focus:bg-[#2C3E50] focus:shadow-sm focus:drop-shadow-lg ${
-        isActive ? "bg-[#2C3E50] text-white" : "hover:bg-gray-100"
-      }`}
-      onClick={onClick}
-      whileHover={{ scale: 1.05 }}
-      whileFocus={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      layout
-    >
-      <div className="relative flex items-center gap-3 px-15">
-        <div className="absolute top-0 left-0">{icon}</div>
-        <span>{label}</span>
-      </div>
-    </motion.button>
-  );
 
   // Handle navigation to other dashboards
   const handleDashboardNav = (role: any) => {
@@ -106,7 +81,7 @@ const AdminDashboard = () => {
     return (
       <button
         type="button"
-        className="px-3 py-2 text-sm shadow-sm rounded-sm border border-gray-200 hover:bg-gray-100 focus:text-white focus:bg-[#2C3E50] focus:drop-shadow-lg"
+        className="px-3 py-2 text-sm shadow-sm rounded-lg border border-gray-200 hover:bg-gray-100 focus:text-white focus:bg-[#2C3E50] focus:drop-shadow-lg"
         onClick={onClick}
       >
         {label}
@@ -122,55 +97,36 @@ const AdminDashboard = () => {
     setIsModalOpen(false);
   };
 
-  // Handle delete account
-  // const handleDeleteAccount = () => {
-  //   setLoading(true);
-  //   setTimeout(async () => {
-  //     await doDeleteUser(currentUser?.email || "", password)
-  //       .then(() => {
-  //         navigate("/");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error deleting account:", error);
-  //       });
-  //   }, 800);
-  // };
-
   // Redirect if not authenticated or not an admin
   useEffect(() => {
     if (loading) return;
     if (!currentUser) {
       navigate("/home");
-    } else if (role !== "admin") {
+    } else if (role !== "Admin") {
       navigate(`/${role}`);
     }
   }, [currentUser, role, navigate, loading]);
 
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto'; // Reset scrolling on unmount
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white flex rounded-lg">
+    <div className="bg-white flex rounded-lg h-[100vh] max-h-[100vh]">
       {/* {loading && <Loading />} */}
       {/* Sidebar */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <motion.div
-        className="w-20 hover:w-64 border-r border-gray-200 flex flex-col justify-between overflow-hidden transition-width duration-300 ease-in-out sticky top-0 h-screen"
-        initial={{ x: -100 }}
+        className="w-20 border-r border-gray-200 flex flex-col justify-between overflow-hidden"
+        initial={{ x: -100, width: 80 }}
         animate={{ x: 0 }}
+        whileHover={{ width: 256 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
       >
         <div className="flex flex-col">
-          <div className="relative w-64 px-22 py-4 flex items-center gap-2 border-b-1 border-gray-200">
-            <Shield size={34} className="absolute top-auto left-6" />
+          <div className="relative w-64 px-22 py-5 flex items-center gap-2 border-b-1 border-gray-200">
+            <img src={symbol} alt="Sample Icon" className="size-10 absolute top-auto left-5" />
             <h2 className="whitespace-nowrap font-extrabold">ADMIN</h2>
           </div>
 
@@ -220,11 +176,11 @@ const AdminDashboard = () => {
       </motion.div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col h-[100vh] max-h-[100vh]">
         {/* Header */}
-        <header className="h-16 border-b border-gray-200 flex items-center justify-between px-6">
+        <header className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-5 flex-shrink-0">
           <div className="md:hidden">
-            <Shield className="h-6 w-6 text-primary" />
+            {/* <Shield className="h-6 w-6 text-primary" /> */}
           </div>
 
           <div className="flex items-center gap-4 justify-between w-full">
@@ -234,7 +190,7 @@ const AdminDashboard = () => {
                 alt="Salimbigkas Logo"
                 className="w-50"
               />
-              <div className="hidden md:flex items-center gap-2">
+              {/* <div className="hidden md:flex items-center gap-2">
                 <DashboardNav
                   onClick={() => handleDashboardNav("teacher")}
                   label="Teacher View"
@@ -243,16 +199,21 @@ const AdminDashboard = () => {
                   onClick={() => handleDashboardNav("student")}
                   label="Student View"
                 />
-              </div>
+              </div> */}
             </div>
             <div className="flex gap-4 items-center justify-between">
-              <button type="button" className="relative">
-                <Bell className="h-5 w-5" />
-                {/* {currentUser?.notifications > 0 && (
-                  <div className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0">
-                    {currentUser?.notifications}
-                  </div>
-                )} */}
+              <button
+                title="Notifications"
+                type="button"
+                className="relative p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <Bell className="h-5 w-5 text-gray-600" />
+                <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center">
+                  <span className="relative flex size-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+                    <span className="relative inline-flex size-3 rounded-full bg-sky-500"></span>
+                  </span>
+                </span>
               </button>
               <img
                 src={man}
@@ -263,22 +224,37 @@ const AdminDashboard = () => {
           </div>
         </header>
         
-        <main className="flex-1 overflow-auto p-4 md:p-6 pb-20 md:pb-6">
-          <div className="max-w-8xl mx-auto space-y-6">
+        <main className="flex-1 overflow-y-auto bg-white">
+          <motion.div 
+            className="max-w-8xl mx-auto space-y-6 overflow-visible"
+            key={activeTab} // Add key to trigger re-render on tab change
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
 
             {/* // Admin Dashboard Tabs */}
             <AdminDashboardTab Tab={() => (activeTab === "dashboard" ? "dashboard" : "")} />
 
             {/* // Users Tab */}
             <AdminUsersTab Tab={() => (activeTab === "users" ? "users" : "")} />
+
+            {/* // Courses Tab */}
+            <ClassesTab Tab={() => (activeTab === "classes" ? "classes" : "")} />
+
+            {/* // Analytics Tab */}
+            <AdminAnalyticsTab Tab={() => (activeTab === "analytics" ? "analytics" : "")} />
+              
+            {/* // Schedule Tab */}
+            <CalendarTab Tab={() => (activeTab === "schedule" ? "schedule" : "")} />
             
             {/* // Pronunciation Tab */}
-            <AdminPronunciationTab Tab={() => (activeTab === "pronunciation" ? "pronunciation" : "")} />
+            {/* <AdminPronunciationTab Tab={() => (activeTab === "pronunciation" ? "pronunciation" : "")} /> */}
             
             {/* // System Tab */}
             <AdminSystemTab Tab={() => (activeTab === "system" ? "system" : "")} />
 
-          </div>
+          </motion.div>
         </main>
       </div>
       {isModalOpen && (

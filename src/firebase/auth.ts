@@ -1,5 +1,6 @@
 // firebaseAuth.tsx
 import { auth, db } from './firebase';
+import { doSetUserRole } from '../api/functions';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -11,7 +12,7 @@ import {
   // getRedirectResult,
   GoogleAuthProvider,
   OAuthProvider,
-  onAuthStateChanged,
+  // onAuthStateChanged,
   reauthenticateWithCredential,
   EmailAuthProvider,
   deleteUser,
@@ -57,7 +58,8 @@ export const doCreateUserWithEmailAndPassword = async (
   email: string,
   password: string,
   name: string,
-  rememberMe: boolean = true
+  rememberMe: boolean,
+  role: string,
 ): Promise<User> => {
 
   await applyPersistence(rememberMe);
@@ -66,14 +68,16 @@ export const doCreateUserWithEmailAndPassword = async (
   const user = userCredential.user;
   await doUpdateProfile({ displayName: name });
   await createUserDocumentfromAuth(user, { displayName: name });
-
-  try {
-    await doSendEmailVerification();
+  const response = await doSetUserRole(user.uid, role) as any;
+  if (response?.success) {
+    
+    try {
+      await doSendEmailVerification();
+    }
+    catch (error) {
+      console.error('Error sending email verification:', error);
+    }
   }
-  catch (error) {
-    console.error('Error sending email verification:', error);
-  }
-
   return user;
 };
 
@@ -160,8 +164,9 @@ export const createUserDocumentfromAuth = async (
   const snapshot = await getDoc(userRef);
   const tokenResult = await userAuth.getIdTokenResult();
   const defaultData: Record<string, any> = {
-    uid: userAuth.uid,
-    role: tokenResult.claims.role || 'student',
+    disabled: false,
+    role: tokenResult.claims.role || 'Student',
+    grade: tokenResult.claims.grade || 'Not Enrolled',
     displayName: userAuth.displayName || 'User',
     email: userAuth.email,
     emailVerified: userAuth.emailVerified || false,
@@ -191,26 +196,26 @@ export const createUserDocumentfromAuth = async (
 };
 
 // Auth state listener
-export const onAuthStateChange = (
-  callback: (user: User | null) => void
-): (() => void) => {
-  return onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        // Call createUserDocumentfromAuth to handle Firestore updates
-        await createUserDocumentfromAuth(user);
+// export const onAuthStateChange = (
+//   callback: (user: User | null) => void
+// ): (() => void) => {
+//   return onAuthStateChanged(auth, async (user) => {
+//     if (user) {
+//       try {
+//         // Call createUserDocumentfromAuth to handle Firestore updates
+//         await createUserDocumentfromAuth(user);
 
-        // Pass the user object to the callback
-        callback(user);
-      } catch (error) {
-        console.error('Error updating user document on auth state change:', error);
-      }
-    } else {
-      // Pass null to the callback when the user is signed out
-      callback(null);
-    }
-  });
-};
+//         // Pass the user object to the callback
+//         callback(user);
+//       } catch (error) {
+//         console.error('Error updating user document on auth state change:', error);
+//       }
+//     } else {
+//       // Pass null to the callback when the user is signed out
+//       callback(null);
+//     }
+//   });
+// };
 
 const requireCurrentUser = (): User => {
   const user = auth.currentUser;

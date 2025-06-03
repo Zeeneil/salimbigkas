@@ -2,11 +2,12 @@ import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/authContext';
 import { doCreateUserWithEmailAndPassword, doSignInWithGoogle, doSignInWithFacebook } from '../../firebase/auth';
-import { Eye, EyeClosed } from 'lucide-react';
+import { Eye, EyeClosed, ChevronDown } from 'lucide-react';
 
 import { motion } from 'framer-motion';
 import EmailVerificationModal from './EmailVerificationModal';
 import SignInWithSocials from '../Buttons/SignInWithSocials';
+import { SpinLoadingWhite } from '../Icons/icons';
 
 // Component for the Register Modal
 interface RegisterModalProps {
@@ -21,6 +22,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
   const [fullname, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [accountType, setAccountType] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSigningInWithGoogle, setIsSigningInWithGoogle] = useState(false);
   const [isSigningInWithFacebook, setisSigningInWithFacebook] = useState(false);
@@ -32,7 +34,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
 
   // Get user role from context
   const { role } = useAuth();
-
+  
   // Handle user registration
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +46,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
       setIsRegistering(true);
       setErrorMessage('');
       try {
-        await doCreateUserWithEmailAndPassword(email, password, fullname);
+        await doCreateUserWithEmailAndPassword(email, password, fullname, true, accountType);
         setShowVerificationModal(true);
       } catch (error) {
         setErrorMessage('The email address is already in use. Please use a different email.');
@@ -103,7 +105,9 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
         {/* Close button */}
         <a
           className="absolute top-3 right-5 text-black text-2xl cursor-pointer"
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+          }}
         >
           &times;
         </a>
@@ -226,7 +230,32 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
               Password
             </label>
           </div>
-
+          {/* Role selection */}
+          <div className="mt-5 mb-4 text-left relative">
+            <select
+                disabled={isRegistering}
+                title='role'
+                name='role'
+                id="role"
+                required
+                className={`w-full p-4 border rounded-sm transition-all duration-300 focus:ring-2 focus:ring-[#2C3E50] focus:outline-none appearance-none ${accountType ? 'border-[#2C3E50]' : 'border-gray-300'}`}
+                value={accountType}
+                onChange={(e) => setAccountType(e.target.value)}
+            >
+                <option value=""></option>
+                <option value="Teacher">Teacher</option>
+                <option value="Student">Student</option>
+            </select>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+              <ChevronDown size={20} />
+            </span>
+            <label 
+              className={`absolute text-sm font-medium left-3 top-4 text-[#2C3E50] px-1 transition-all duration-300 transform ${accountType ? 'bg-white top-[-10px] text-[#2C3E50] text-sm' : 'top-4 text-gray-500 text-base'}`}
+              htmlFor="Filter by role"
+            >
+              Choose your role
+            </label>
+          </div>
           {/* Register button */}
           <button
             type="submit"
@@ -234,11 +263,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitch }: RegisterModalProps) => {
             disabled={isRegistering}
           >
             {isRegistering ? 
-              <div className="flex items-center justify-center">
-                <svg className="animate-spin mr-3 size-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C6.47715 2 2 6.47715 2 12H5C5 7.58172 8.58172 4 12 4V2Z" fill="currentColor" />
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 16.4183 15.4183 20 12 20V22Z" fill="currentColor" />
-                </svg>
+              <div className="flex items-center justify-center gap-2">
+                <SpinLoadingWhite />
                 Processing...
               </div>
               : 

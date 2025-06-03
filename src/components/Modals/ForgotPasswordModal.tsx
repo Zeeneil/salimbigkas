@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { doPasswordReset } from '../../firebase/auth';
 import { CircleCheck, CircleAlert } from 'lucide-react';
+import { SpinLoadingWhite } from '../Icons/icons';
 // import { auth } from '../../firebase/firebase';
 // import EmailVerificationModal from './EmailVerificationModal';
 
@@ -74,13 +75,14 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
                 <AnimatePresence>
                     {Message &&
                         <motion.div
-                            className={`flex mt-5 mb-4 py-5 px-12 ${isEmailVerified ? 'bg-green-100' : 'bg-[#FBE6E6]'} justify-center items-center rounded-sm shadow-sm drop-shadow-sm`}
+                            // className={`flex mt-5 mb-4 py-5 px-12 ${isEmailVerified ? 'bg-green-100' : 'bg-[#FBE6E6]'} justify-center items-center rounded-sm shadow-sm drop-shadow-sm`}
+                            className={`flex mt-5 mb-4 py-5 px-12 bg-green-100 justify-center items-center rounded-sm shadow-sm drop-shadow-sm`}
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.3 }}
                         >
-                            {isEmailVerified ?
+                            {/* {isEmailVerified ?
                                 <>
                                     <CircleCheck size={20} className="absolute top-auto left-6 text-green-600" />
                                     <p className="text-sm text-green-600">{Message}</p>
@@ -90,7 +92,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
                                     <CircleAlert size={20} className="absolute top-auto left-6 text-red-600" />
                                     <p className="text-sm text-[#D30001]">{Message}</p>
                                 </>
-                            }
+                            } */}
+                            <CircleCheck size={20} className="absolute top-auto left-6 text-green-600" />
+                            <p className="text-sm text-green-600">{Message}</p>
                         </motion.div>
                     }
                 </AnimatePresence>
@@ -133,21 +137,24 @@ const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProps) => {
                     </div>
 
                     {/* Reset Password button */}
-                    <button
+                    {/* <button
                         type="submit"
                         className={`w-full mt-6 bg-[#2C3E50] text-white p-4 rounded-lg shadow-md drop-shadow-lg ${isEmailVerified ? 'opacity-80 cursor-not-allowed' : 'hover:font-medium hover:border-[#386BF6] hover:bg-[#34495e]'}`}
                     >
                         {isEmailVerified ? 
-                        <div className="flex items-center justify-center">
-                            <svg className="animate-spin size-5 mr-3 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.47715 2 2 6.47715 2 12H5C5 7.58172 8.58172 4 12 4V2Z" fill="currentColor" />
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 16.4183 15.4183 20 12 20V22Z" fill="currentColor" />
-                            </svg>
-                            Processing...
-                        </div>
+                            <div className="flex items-center justify-center gap-2">
+                                <SpinLoadingWhite />
+                                Processing...
+                            </div>
                         : 
-                        'Reset Password'
+                            'Reset Password'
                         }
+                    </button> */}
+                    <button
+                        type="submit"
+                        className={`w-full mt-6 bg-[#2C3E50] text-white p-4 rounded-lg shadow-md drop-shadow-lg hover:font-medium hover:border-[#386BF6] hover:bg-[#34495e]`}
+                    >
+                        Reset Password
                     </button>
                 </form>
             </motion.div>

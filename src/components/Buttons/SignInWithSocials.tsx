@@ -1,4 +1,5 @@
 import React from 'react';
+import { SpinLoadingColored } from '../Icons/icons';
 
 interface SocialsProps {
     onGoogleSignIn: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -32,11 +33,8 @@ const SignInWithSocials = ({ onGoogleSignIn , isSigningInWithGoogle, onFacebookS
                     </defs>
                 </svg>
                 {isSigningInWithGoogle ? 
-                    <div className="flex items-center justify-center">
-                        <svg className="animate-spin size-5 mr-3 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.47715 2 2 6.47715 2 12H5C5 7.58172 8.58172 4 12 4V2Z" fill="currentColor" />
-                        <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 16.4183 15.4183 20 12 20V22Z" fill="currentColor" />
-                        </svg>
+                    <div className="flex items-center justify-center gap-2">
+                        <SpinLoadingColored />
                         Processing...
                     </div>
                     : 
@@ -56,11 +54,8 @@ const SignInWithSocials = ({ onGoogleSignIn , isSigningInWithGoogle, onFacebookS
                     <path fill="#ffffff" d="M10.725 10.023L11.035 8H9.094V6.687c0-.553.27-1.093 1.14-1.093h.883V3.87s-.801-.137-1.567-.137c-1.6 0-2.644.97-2.644 2.724V8H5.13v2.023h1.777v4.892a7.037 7.037 0 002.188 0v-4.892h1.63z"/>
                 </svg>
                 {isSigningInWithFacebook ? 
-                    <div className="flex items-center justify-center">
-                        <svg className="animate-spin size-5 mr-3 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.47715 2 2 6.47715 2 12H5C5 7.58172 8.58172 4 12 4V2Z" fill="currentColor" />
-                        <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 16.4183 15.4183 20 12 20V22Z" fill="currentColor" />
-                        </svg>
+                    <div className="flex items-center justify-center gap-2">
+                        <SpinLoadingColored />
                         Processing...
                     </div>
                     : 
