@@ -15,23 +15,19 @@ const NavButton = ({
   isActive = false,
 }: NavButtonProps) => (
   <motion.button
-    className={`w-full py-1.5 px-3 rounded-lg ${
-      isActive ? "bg-[#2C3E50] text-white" : "hover:bg-gray-100"
+    title={label}
+    type="button"
+    className={`w-full py-4 px-3 rounded-lg ${
+      isActive ? "text-[#2C3E50] bg-[#F8F8F8]" : "text-white bg-transparent hover:text-[#2C3E50] hover:bg-[#F8F8F8]"
     }`}
     onClick={onClick}
     whileHover={{ scale: 1.05 }}
-    whileFocus={{
-      scale: 1.05,
-      backgroundColor: "#2C3E50",
-      color: "#ffffff",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-    }}
     whileTap={{ scale: 0.95 }}
     layout
   >
     <div className="relative flex items-center gap-3 px-15">
       <div className="absolute top-0 left-0">{icon}</div>
-      <span className="whitespace-nowrap">{label}</span>
+      <span className="font-bold whitespace-nowrap">{label}</span>
     </div>
   </motion.button>
 );

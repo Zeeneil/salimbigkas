@@ -1,12 +1,47 @@
 @import "tailwindcss";
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+@font-face {
+  font-family: 'chalkboard';
+  src: url('./assets/fonts/Chalk Board.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+#nprogress .bar {
+  background: #208ec5 !important;
+  box-shadow: 0 0 10px #208ec5, 0 0 5px #208ec5 !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #208ec5 !important;
+  border-left-color: #208ec5 !important;
+}
+
+.chalk-text {
+  font-family: 'chalkboard', cursive;
+  color: #fff;
+  text-shadow: 0 1px 2px #333;
+}
+
+.chalk-text:hover {
+  color: #f0c040;
+  text-shadow: 0 2px 4px #000;
+}
+
+/* Hide number input arrows for Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* .hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
 }
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-}
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+} */
 
 .Toastify__toast {
   min-width: 350px !important;
@@ -36,7 +71,7 @@
 }
 
 .fc-list-table .fc-list-day-cushion {
-  background: #2C3E50 !important;
+  background: #2c3e50 !important;
   color: #fff !important;
   font-weight: 600;
   padding: 12px 10px;
@@ -81,35 +116,37 @@
   --fc-daygrid-event-dot-width: 8px;
 }
 
-/* Modern and minimalistic scrollbar styles */
-::-webkit-scrollbar {
-  width: 10px; /* Slightly wider for better usability */
+/* ::-webkit-scrollbar {
+  position: sticky;
+  width: 10px;/
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f5f5; /* Light, neutral background for the track */
-  border-radius: 10px; /* Smooth, rounded corners */
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #2C3E50, #34495e); /* Subtle gradient for a modern look */
-  border-radius: 10px; /* Rounded corners for the thumb */
-  border: 2px solid #f5f5f5; /* Adds spacing between the thumb and track */
+  background: #D3D3D3;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #34495e, #2C3E50); /* Slightly darker gradient on hover */
+  background: linear-gradient(
+    180deg,
+    #2c3e50,
+    #2c3e50
+  );
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #1a252f; /* Darker color for active state */
-}
+  background: #2c3e50;
+} */
 
 a {
   font-weight: 500;
 }
 a:hover {
-  color: #386BF6;
+  color: #386bf6;
 }
 
 body {
@@ -153,7 +190,7 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #386BF6;
+    color: #386bf6;
   }
   button {
     background-color: #f9f9f9;

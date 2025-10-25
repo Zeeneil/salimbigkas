@@ -1,23 +1,27 @@
 // firebaseAuth.tsx
-import { auth, db } from './firebase';
-import { doSetUserRole } from '../api/functions';
+import { auth, db, get, update, storageRef, uploadBytes, getDownloadURL, storage, database, dbRef, set } from "./firebase";
+import { doSetUserClaims, doCheckUserProfileDuplicates } from "../api/functions";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   sendEmailVerification,
   updatePassword,
-  signInWithPopup,
   signInWithRedirect,
-  // getRedirectResult,
   GoogleAuthProvider,
+  FacebookAuthProvider,
   OAuthProvider,
-  // onAuthStateChanged,
+  onAuthStateChanged,
   reauthenticateWithCredential,
   EmailAuthProvider,
   deleteUser,
-  updateEmail,
+  // updateEmail,
+  verifyBeforeUpdateEmail,
   updateProfile,
+  // updatePhoneNumber,
+  // PhoneAuthProvider,
+  // PhoneAuthCredential,
+  // RecaptchaVerifier,
   User,
   AuthProvider,
   UserCredential,
@@ -25,7 +29,7 @@ import {
   browserSessionPersistence,
   browserLocalPersistence,
   // UserProfile
-} from 'firebase/auth';
+} from "firebase/auth";
 import {
   serverTimestamp,
   doc,
@@ -33,23 +37,16 @@ import {
   getDoc,
   DocumentReference,
   DocumentData,
-} from 'firebase/firestore';
-
-// Additional types
+} from "firebase/firestore";
 interface AdditionalUserData {
   [key: string]: any;
 }
 
-interface ProfileUpdate {
-  displayName?: string | null;
-  photoURL?: string | null;
-}
-
 // Initialize Firebase Authentication and Firestore
-const applyPersistence = async (
-  rememberMe: boolean = true
-): Promise<void> => {
-  const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+const applyPersistence = async (rememberMe: boolean = true): Promise<void> => {
+  const persistence = rememberMe
+    ? browserLocalPersistence
+    : browserSessionPersistence;
   await setPersistence(auth, persistence);
 };
 
@@ -60,114 +57,132 @@ export const doCreateUserWithEmailAndPassword = async (
   name: string,
   rememberMe: boolean,
   role: string,
-): Promise<User> => {
-
+  gradeLevels: string[] | null = null,
+  gradeLevel: string | null = null,
+): Promise<{ success: boolean }> => {
   await applyPersistence(rememberMe);
-
-  const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const userCredential: UserCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
   const user = userCredential.user;
-  await doUpdateProfile({ displayName: name });
-  await createUserDocumentfromAuth(user, { displayName: name });
-  const response = await doSetUserRole(user.uid, role) as any;
+  await updateProfile(user, { displayName: name });
+  await createUserDocumentfromAuth(user, { 
+    displayName: name,
+    [role === "Admin" || role === "Teacher" ? 'gradeLevels' : 'gradeLevel']: role === "Admin" || role === "Teacher" ? gradeLevels : gradeLevel,
+    role: role,
+  });
+  const response = await doSetUserClaims(user.uid, role, gradeLevels, gradeLevel) as any;
   if (response?.success) {
-    
     try {
       await doSendEmailVerification();
-    }
-    catch (error) {
-      console.error('Error sending email verification:', error);
+    } catch (error) {
+      console.error("Error sending email verification:", error);
     }
   }
-  return user;
+  return {success: true};
 };
 
 // Sign in user
 export const doSignInWithEmailAndPassword = async (
   email: string,
   password: string,
-  rememberMe: boolean = true
-): Promise<User> => {
-
+  rememberMe: boolean = true,
+): Promise<{ success: boolean }> => {
   await applyPersistence(rememberMe);
-
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
   const user = userCredential.user;
-
   if (!user.emailVerified) {
     await doSendEmailVerification();
   }
-
-  await createUserDocumentfromAuth(user, {});
-  return user;
+  await createUserDocumentfromAuth(user);
+  return {success: true};
 };
 
 // Sign in with provider
 const doSignInWithProvider = async (
   provider: AuthProvider,
-  rememberMe: boolean = true
-): Promise<User> => {
+  rememberMe: boolean = true,
+): Promise<void> => {
   await applyPersistence(rememberMe);
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
-  await createUserDocumentfromAuth(user, {});
-  return user;
-};
-
-// Google redirect
-export const doSignInWithGoogleRedirect = (): void => {
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-  signInWithRedirect(auth, provider);
+  await signInWithRedirect(auth, provider);
 };
 
 // Google popup
 export const doSignInWithGoogle = async (
-  rememberMe: boolean = true
-): Promise<User> => {
+  rememberMe: boolean = true,
+): Promise<{success: boolean}> => {
   const provider = new GoogleAuthProvider();
-  return await doSignInWithProvider(provider, rememberMe);
+  await doSignInWithProvider(provider, rememberMe)
+  return {success: true};
 };
 
 // Facebook sign-in
 export const doSignInWithFacebook = async (
-  rememberMe: boolean = true
-): Promise<User> => {
-  const provider = new OAuthProvider('facebook.com');
-  return await doSignInWithProvider(provider, rememberMe);
+  rememberMe: boolean = true,
+): Promise<{success: boolean}> => {
+  const provider = new FacebookAuthProvider();
+  await doSignInWithProvider(provider, rememberMe);
+  return {success: true};
 };
 
 // Apple sign-in
 export const doSignInWithApple = async (
-  rememberMe: boolean = true
-): Promise<User> => {
-  const provider = new OAuthProvider('apple.com');
-  return await doSignInWithProvider(provider, rememberMe);
+  rememberMe: boolean = true,
+): Promise<void> => {
+  const provider = new OAuthProvider("apple.com");
+  await doSignInWithProvider(provider, rememberMe);
 };
 
 // Microsoft sign-in
 export const doSignInWithMicrosoft = async (
-  rememberMe: boolean = true
-): Promise<User> => {
-  const provider = new OAuthProvider('microsoft.com');
-  provider.setCustomParameters({ prompt: 'consent' });
-  return await doSignInWithProvider(provider, rememberMe);
+  rememberMe: boolean = true,
+): Promise<void> => {
+  const provider = new OAuthProvider("microsoft.com");
+  provider.setCustomParameters({ prompt: "consent" });
+  await doSignInWithProvider(provider, rememberMe);
+};
+
+// Auth state listener
+export const onAuthStateChange = (
+  callback: (user: User | null) => void
+): (() => void) => {
+  return onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        await createUserDocumentfromAuth(user);
+        callback(user);
+      } catch (error) {
+        console.error('Error updating user document on auth state change:', error);
+        callback(user);
+      }
+    } else {
+      callback(null);
+    }
+  });
 };
 
 // Create or update Firestore document
 export const createUserDocumentfromAuth = async (
   userAuth: User | null,
-  additionalData: AdditionalUserData = {}
+  additionalData: AdditionalUserData = {},
 ): Promise<DocumentReference<DocumentData> | void> => {
   if (!userAuth) return;
-
-  const userRef = doc(db, 'users', userAuth.uid);
-  const snapshot = await getDoc(userRef);
+  const realtimeUserRef = dbRef(database, `users/${userAuth.uid}`);
+  const snapshot = await get(realtimeUserRef);
+  const userRef = doc(db, "users", userAuth.uid);
+  const userDoc = await getDoc(userRef);
   const tokenResult = await userAuth.getIdTokenResult();
-  const defaultData: Record<string, any> = {
-    disabled: false,
-    role: tokenResult.claims.role || 'Student',
-    grade: tokenResult.claims.grade || 'Not Enrolled',
-    displayName: userAuth.displayName || 'User',
+  const role = tokenResult.claims.role || "Student";
+  let defaultData: Record<string, any> = {
+    disabled: true,
+    role,
+    displayName: userAuth.displayName,
     email: userAuth.email,
     emailVerified: userAuth.emailVerified || false,
     photoURL: userAuth.photoURL || null,
@@ -177,49 +192,42 @@ export const createUserDocumentfromAuth = async (
       lastSignInTime: userAuth.metadata.lastSignInTime,
     },
     updatedAt: serverTimestamp(),
+    createdAt: serverTimestamp(),
     ...additionalData,
   };
-
-  // Only add `createdAt` if the document does not exist
-  if (!snapshot.exists()) {
-    defaultData.createdAt = serverTimestamp();
+  if (role === "Admin" || role === "Teacher") {
+    defaultData.gradeLevels = tokenResult.claims.gradeLevels || null;
+    delete defaultData.gradeLevel; // Admins and Teachers do not have a specific grade level
+  } else {
+    delete defaultData.gradeLevels;
+    defaultData.gradeLevel = tokenResult.claims.gradeLevel || null;
   }
-
-  try {
+  if (!userDoc.exists() && !snapshot.exists()) {
     await setDoc(userRef, defaultData, { merge: true });
-  } catch (error) {
-    console.error('Error creating/updating user document:', error);
-    throw error;
+    await set(realtimeUserRef, { ...defaultData, lastActiveAt: serverTimestamp() });
+    const emailKey = userAuth.email ? userAuth.email.replace(/\./g, ',') : null;
+    if (emailKey) {
+      const userEmailRef = dbRef(database, `userEmails/${emailKey}`);
+      await set(userEmailRef, { uid: userAuth.uid });
+    }
+  } else {
+    // Only update fields that should be refreshed, but DO NOT overwrite gradeLevel/gradeLevels, role, etc.
+    const updates: Record<string, any> = {
+      displayName: userAuth.displayName || null,
+      emailVerified: userAuth.emailVerified || false,
+      photoURL: userAuth.photoURL || null,
+      updatedAt: serverTimestamp(),
+      lastActiveAt: serverTimestamp(),
+    };
+    await setDoc(userRef, updates, { merge: true });
+    await update(realtimeUserRef, updates);
   }
-
   return userRef;
 };
 
-// Auth state listener
-// export const onAuthStateChange = (
-//   callback: (user: User | null) => void
-// ): (() => void) => {
-//   return onAuthStateChanged(auth, async (user) => {
-//     if (user) {
-//       try {
-//         // Call createUserDocumentfromAuth to handle Firestore updates
-//         await createUserDocumentfromAuth(user);
-
-//         // Pass the user object to the callback
-//         callback(user);
-//       } catch (error) {
-//         console.error('Error updating user document on auth state change:', error);
-//       }
-//     } else {
-//       // Pass null to the callback when the user is signed out
-//       callback(null);
-//     }
-//   });
-// };
-
 const requireCurrentUser = (): User => {
   const user = auth.currentUser;
-  if (!user) throw new Error('No authenticated user.');
+  if (!user) throw new Error("No authenticated user.");
   return user;
 };
 
@@ -237,9 +245,7 @@ export const doSignOut = (): Promise<void> => {
 };
 
 // Password reset
-export const doPasswordReset = async (
-  email: string
-): Promise<void> => {
+export const doPasswordReset = async (email: string): Promise<void> => {
   return sendPasswordResetEmail(auth, email);
   // const userRef = doc(db, 'users', email);
   // const snapshot = await getDoc(userRef);
@@ -257,9 +263,7 @@ export const doPasswordReset = async (
 };
 
 // Change password
-export const doPasswordChange = (
-  password: string
-): Promise<void> => {
+export const doPasswordChange = (password: string): Promise<void> => {
   const user = requireCurrentUser();
   return updatePassword(user, password);
 };
@@ -267,7 +271,7 @@ export const doPasswordChange = (
 // Reauthenticate with email
 export const doReauthenticateWithEmail = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<void> => {
   const credential = EmailAuthProvider.credential(email, password);
   const user = requireCurrentUser();
@@ -277,31 +281,87 @@ export const doReauthenticateWithEmail = async (
 // Delete user
 export const doDeleteUser = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<void> => {
   const user = requireCurrentUser();
   try {
     await doReauthenticateWithEmail(email, password);
-    await setDoc(doc(db, 'users', user.uid), {}, { merge: false });
+    await setDoc(doc(db, "users", user.uid), {}, { merge: false });
     await deleteUser(user);
   } catch (error) {
-    console.error('Error during account deletion:', error);
+    console.error("Error during account deletion:", error);
     throw error;
   }
 };
 
-// Update email
-export const doUpdateEmail = async (
-  newEmail: string
-): Promise<void> => {
+export const doVerifyBeforeUpdateEmail = async (newEmail: string) => {
   const user = requireCurrentUser();
-  await updateEmail(user, newEmail);
+  try {
+    await verifyBeforeUpdateEmail(user, newEmail, {
+      url: `${window.location.origin}/home`,
+      handleCodeInApp: true,
+    });
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, { email: newEmail }, { merge: true });
+    const newEmailKey = newEmail.replace(/\./g, ',');
+    const newUserEmailRef = dbRef(database, `userEmails/${newEmailKey}`);
+    await set(newUserEmailRef, { uid: user.uid });
+  } catch (error) {
+    console.error("Error updating email:", error);
+    throw error;
+  }
 };
 
-// Update profile
-export const doUpdateProfile = async (
-  profile: ProfileUpdate
+export const doUpdateUserProfile = async (
+  {
+    displayName,
+    email,
+    phoneNumber,
+    photoFile,
+  }: {
+    displayName: string;
+    email: string;
+    phoneNumber: string;
+    photoFile?: File | null;
+  }
 ): Promise<void> => {
   const user = requireCurrentUser();
-  await updateProfile(user, profile);
+
+  try {
+    await doCheckUserProfileDuplicates(user.uid, displayName, phoneNumber);
+  } catch (err: any) {
+    throw err;
+  }
+  let photoURL = user.photoURL || null;
+  if (photoFile) {
+    const photoRef = storageRef(storage, `profilePhotos/${user.uid}/${photoFile.name}`);
+    await uploadBytes(photoRef, photoFile);
+    photoURL = await getDownloadURL(photoRef);
+  }
+
+  // if (phoneNumber && phoneNumber !== user.phoneNumber) {
+  //   const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+  //   const provider = new PhoneAuthProvider(auth);
+  //   const verificationId = await provider.verifyPhoneNumber(phoneNumber, recaptchaVerifier);
+  //   const verificationCode = window.prompt("Enter the verification code sent to your phone:");
+  //   if (!verificationCode) throw new Error("Verification code is required.");
+  //   const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
+  //   await updatePhoneNumber(user, credential);
+  // }
+
+  // Update Firestore document
+  const userRef = doc(db, "users", user.uid);
+  await setDoc(userRef, {
+    displayName,
+    email,
+    phoneNumber,
+    photoURL,
+    updatedAt: serverTimestamp(),
+  }, { merge: true });
 };
+
+export const syncEmailVerifiedToRealtimeDB = async (user: User) => {
+  const userRef = dbRef(database, `users/${user.uid}/emailVerified`);
+  await set(userRef, user.emailVerified);
+};
+

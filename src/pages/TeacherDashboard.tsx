@@ -1,232 +1,75 @@
-import { useState, useEffect, JSX } from "react"
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import {
-  Bell,
-  BookOpen,
-  Calendar,
-  Home,
-  MessageSquare,
-  Settings,
-  Users,
-  FileText,
-  Mic,
-  LogOut,
-} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from '../hooks/authContext';
-import NavButton from "../components/Buttons/NavButton";
-import LogoutModal from "../components/Modals/LogoutModal";
-import TeacherDashboardTab from "../components/TeacherDashboard/TeacherDashboardTab";
-import ClassesTab from "../components/Class/ClassesTab";
-import TeacherStudentsTab from "../components/TeacherDashboard/TeacherStudentsTab";
-import TeacherAssignmentsTab from "../components/TeacherDashboard/TeacherAssignmentsTab";
-import TeacherPronunciationTab from "../components/TeacherDashboard/TeacherPronunciationTab";
-import CalendarTab from "../components/Calendar/CalendarTab";
-import TeacherMessagesTab from "../components/TeacherDashboard/TeacherMessagesTab";
-import TeacherSettingsTab from "../components/TeacherDashboard/TeacherSettingsTab";
-
-import woman from '../assets/woman.svg';
-import salimbigkas from '../assets/salimbigkas-poppins.svg';
-import symbol from '../assets/sb-symbol.svg';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import { TeacherNavItems, TeacherTab } from "./DashboardConstant";
+import Header from "./Header";
+import SideBar from "./SideBar";
+import { BarLoader } from "react-spinners";
+import { useLogReg } from "../components/Modals/LogRegProvider";
 
 const TeacherDashboard = () => {
-  
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathSegments = location.pathname.split("/");
+  const { currentUser, role, loading } = useAuth();
+  const { formattedGradeLevel } = useLogReg();
+  const validTabs: TeacherTab[] = TeacherNavItems.map(item => item.tab);
+  const tab = pathSegments.find(seg => validTabs.includes(seg as TeacherTab)) as TeacherTab || "dashboard";
+  const [activeTab, setActiveTab] = useState<TeacherTab>(tab);
 
-  // Get current user from auth service
-  const { currentUser, role } = useAuth();
-
-  type Tab = "dashboard" | "classes" | "students" | "assignments" | "pronunciation" | "schedule" | "messages" | "settings";
-  
-  const [activeTab, setActiveTab] = useState<Tab>("dashboard");
-
-  const NavItems: { tab: Tab; label: string; icon: JSX.Element }[] = [
-    { tab: "dashboard", label: "Dashboard", icon: <Home size={22} /> },
-    { tab: "classes", label: "My Classes", icon: <BookOpen size={22} /> },
-    { tab: "students", label: "Students", icon: <Users size={22} /> },
-    { tab: "assignments", label: "Assignments", icon: <FileText size={22} /> },
-    // { tab: "pronunciation", label: "Pronunciation", icon: <Mic size={22} /> },
-    { tab: "schedule", label: "Schedule", icon: <Calendar size={22} /> },
-    { tab: "messages", label: "Messages", icon: <MessageSquare size={22} /> },
-  ];
-
-  // Handle tab change with loading animation
-  const handleTabChange = (tab: Tab) => {
-    if (tab === activeTab) return; // Prevent reloading the same tab
-    setLoading(true);
-    setTimeout(() => {
-      setActiveTab(tab);
-      setLoading(false);
-    }, 100);
-  };
-
-  // Handle logout
-  const openLogoutModal = () => {
-    setIsModalOpen(true);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Redirect if not authenticated or not an teacher
   useEffect(() => {
-    if (loading) return;
+    setActiveTab(tab);
+  }, [tab]);
+
+  const handleTabChange = useCallback((tab: TeacherTab) => {
+    if (tab === activeTab) return;
+    navigate(`/${role?.toLowerCase()}/${formattedGradeLevel}/${tab}`);
+  }, [activeTab, formattedGradeLevel, navigate, role]);
+
+  useEffect(() => {
     if (!currentUser) {
       navigate("/home");
     } else if (role !== "Teacher") {
-      navigate(`/${role}`);
+      navigate(`/${role}/${formattedGradeLevel}`);
     }
-  }, [currentUser, navigate, loading, role]);
+  }, [currentUser, navigate, role, formattedGradeLevel]);
 
   useEffect(() => {
     return () => {
-      document.body.style.overflow = 'auto'; // Reset scrolling on unmount
+      document.body.style.overflow = "auto";
     };
   }, []);
 
   return (
-    <div className="bg-white flex rounded-lg h-[100vh] max-h-[100vh]">
-      {/* {loading && <Loading />} */}
-      {/* Sidebar */}
-      <motion.div
-        className="w-20 border-r border-gray-200 flex flex-col justify-between overflow-hidden"
-        initial={{ x: -100, width: 80 }}
-        animate={{ x: 0 }}
-        whileHover={{ width: 256 }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      >
-        <div className="flex flex-col h-full">
-          <div className="relative w-64 px-22 py-5 flex items-center gap-2 border-b-1 border-gray-200">
-            <img src={symbol} alt="Sample Icon" className="size-10 absolute top-auto left-5" />
-            <h2 className="whitespace-nowrap font-extrabold">TEACHER</h2>
-          </div>
-
-          <nav className="flex-1 p-4 space-y-2">
-            {NavItems.map((item) => (
-              <NavButton
-                key={item.tab}
-                label={item.label}
-                icon={item.icon}
-                isActive={activeTab === item.tab}
-                onClick={() => handleTabChange(item.tab)}
-              />
-            ))}
-            <div className='border-b-1 mb-2.5 mr-2 w-full border-gray-200'></div>
-            <NavButton
-              label="Settings"
-              icon={<Settings size={22} />}
-              isActive={activeTab === "settings"}
-              onClick={() => handleTabChange("settings")}
-            />
-            <NavButton
-              label="Home"
-              icon={<Home size={22} />}
-              onClick={() => navigate("/")}
-            />
-            <NavButton
-              label="Logout"
-              icon={<LogOut size={22} />}
-              onClick={openLogoutModal}
-            />
-          </nav>
-        </div>
-
-        <div className="p-5 border-t border-gray-200">
-          <div className="relative flex items-center gap-3 px-15">
-            <img
-              src={currentUser?.photoURL || "https://via.placeholder.com/150"}
-              alt="Teacher Avatar"
-              className="absolute top-auto left-0 h-10 w-10 rounded-full border border-gray-200 object-fill"
-            />
-            <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-medium truncate">{currentUser?.displayName}</p>
-                <p className="text-xs truncate">{currentUser?.email}</p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col h-[100vh] max-h-[100vh]">
-        {/* Header */}
-        <header className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-5 flex-shrink-0">
-          <div className="md:hidden">
-            {/* <BookOpen className="h-6 w-6 text-primary" /> */}
-          </div>
-
-          <div className="flex items-center gap-4 justify-between w-full">
-            <div className="flex gap-6 justify-center items-center">
-              <img
-                src={salimbigkas}
-                alt="Salimbigkas Logo"
-                className="w-50"
-              />
-            </div>
-            <div className="flex gap-4 items-center justify-between">
-              <button
-                title="Notifications"
-                type="button"
-                className="relative p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <Bell className="h-5 w-5 text-gray-600" />
-                <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center">
-                  <span className="relative flex size-3">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-                    <span className="relative inline-flex size-3 rounded-full bg-sky-500"></span>
-                  </span>
-                </span>
-              </button>
-              <img
-                src={woman}
-                alt="Teacher Avatar"
-                className="h-10 w-10 rounded-full border border-gray-200 shadow-sm hover:cursor-pointer"
-              />
-            </div>
-          </div>
-        </header>
-        
-        <main className="flex-1 overflow-y-auto bg-white">
-          <motion.div
-            className="max-w-8xl mx-auto space-y-6 overflow-visible"
-            key={activeTab} // Add key to trigger re-render on tab change
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            {/* // Teacher Dashboard Tab */}
-            <TeacherDashboardTab Tab={() => (activeTab === "dashboard" ? "dashboard" : "")} />
-
-            {/* // Classes Tab */}
-            <ClassesTab Tab={() => (activeTab === "classes" ? "classes" : "")} />
-            
-            {/* // Students Tab */}
-            <TeacherStudentsTab Tab={() => (activeTab === "students" ? "students" : "")} />
-
-            {/* // Assignments Tab */}
-            <TeacherAssignmentsTab Tab={() => (activeTab === "assignments" ? "assignments" : "")} />
-
-            {/* // Pronunciation Tab */}
-            {/* <TeacherPronunciationTab Tab={() => (activeTab === "pronunciation" ? "pronunciation" : "")} /> */}
-
-            {/* // Schedule Tab */}
-            <CalendarTab Tab={() => (activeTab === "schedule" ? "schedule" : "")} />
-
-            {/* // Messages Tab */}
-            <TeacherMessagesTab Tab={() => (activeTab === "messages" ? "messages" : "")} />
-
-            {/* // Settings Tab */}
-            <TeacherSettingsTab Tab={() => (activeTab === "settings" ? "settings" : "")} />
-
-          </motion.div>
-        </main>
+    <div className="flex rounded-lg h-screen">
+      <BarLoader
+        color="#208ec5" 
+        loading={loading}
+        cssOverride={
+          {
+            position: 'absolute',
+            backgroundColor: 'transparent',
+            borderColor: '#208ec5',
+            top: 0,
+            left: 0,
+            margin: "0 auto",
+            width: '100%',
+            zIndex: 9999,
+          }
+        }
+        speedMultiplier={0.8}
+      />
+      <SideBar role="Teacher" activeTab={activeTab} handleTabChange={handleTabChange} />
+      <div className="flex-1 flex flex-col h-screen">
+        <Header handleTabChange={() => handleTabChange("notifications")} />
+        <OverlayScrollbarsComponent
+          options={{ scrollbars: { autoHide: "leave" } }}
+          className="flex-1 bg-[#F8F8F8] overflow-y-auto"
+        >
+          <Outlet />
+        </OverlayScrollbarsComponent>
       </div>
-      {isModalOpen && (
-        <div className={'fixed inset-0 bg-black/80 z-50 backdrop-blur-sm flex items-center justify-center'}>
-          <LogoutModal isOpen={isModalOpen} onClose={closeModal}/>
-        </div>
-      )}
     </div>
   );
 };
