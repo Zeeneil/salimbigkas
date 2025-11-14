@@ -117,7 +117,7 @@ const AddMember = () => {
                       loading="lazy"
                       src={imageSrc.man}
                       alt="Photo"
-                      className="w-10 h-10 rounded-full mr-2"
+                      className="w-10 h-10 rounded-full mr-2 object-cover"
                     />
                     <div className="flex flex-col w-full">
                       <div className="flex items-center justify-start">

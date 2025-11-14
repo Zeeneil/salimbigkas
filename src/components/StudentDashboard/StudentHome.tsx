@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SpinLoading } from '../Icons/icons';
 import { getWordImages } from '../../utils/helpers';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -53,9 +52,26 @@ const StudentHome = () => {
             img: imageSrc.quiz,
             icon: imageSrc.leaderboard,
             title: "quiz",
+            onClickLeaderboard: () => {
+                setIsSeatWork(false);
+                navigate(`/${role?.toLowerCase()}/${formattedGradeLevel}/leaderboard`);
+            },
             onClick: () => {
                 setIsSeatWork(false);
                 handleNavigate('quizzes','select-quiz')
+            },
+        },
+        {
+            img: imageSrc.seatwork,
+            icon: imageSrc.leaderboard,
+            title: "seatwork",
+            onClickLeaderboard: () => {
+                setIsSeatWork(true);
+                navigate(`/${role?.toLowerCase()}/${formattedGradeLevel}/leaderboard`);
+            },
+            onClick: () => {
+                setIsSeatWork(true);
+                handleNavigate('seatworks','select-seatwork')
             },
         },
         {
@@ -81,11 +97,11 @@ const StudentHome = () => {
                     title='Left'
                     type='button'
                     onClick={prevSlide}
-                    className="absolute left-5 z-10 p-2 bg-white/70 rounded-full hover:bg-white"
+                    className="absolute left-5 z-10"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <ChevronLeft size={28} />
+                    <img loading="lazy" src={imageSrc.lessThan} alt="Left Arrow" className="size-12 object-contain" />
                 </motion.button>
                 <div className="relative w-full h-full">
                     <AnimatePresence initial={false}>
@@ -102,7 +118,7 @@ const StudentHome = () => {
                                     zIndex: 2,
                                 };
                                 x = 0;
-                            } else if (pos === 1 || pos === -2) {
+                            } else if (pos === 1 || pos === -3) {
                                 style = {
                                     scale: 0.85,
                                     opacity: 0.5,
@@ -110,7 +126,7 @@ const StudentHome = () => {
                                     zIndex: 1,
                                 };
                                 x = 250;
-                            } else if (pos === -1 || pos === 2) {
+                            } else if (pos === -1 || pos === 3) {
                                 style = {
                                     scale: 0.85,
                                     opacity: 0.5,
@@ -136,7 +152,7 @@ const StudentHome = () => {
                                             title={`Leaderboard`}
                                             alt={`${mode.title}-icon`} 
                                             className="block w-16 h-16 object-contain absolute top-4 left-4"
-                                            onClick={() => navigate(`/${role?.toLowerCase()}/${formattedGradeLevel}/leaderboard`)}
+                                            onClick={mode.onClickLeaderboard}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.9 }}
                                         />
@@ -158,11 +174,18 @@ const StudentHome = () => {
                                             <>
                                                 {getWordImages(mode.title, true).map((imageSrc, index) => (
                                                     <img 
+                                                        loading='lazy'
                                                         key={index} 
                                                         src={imageSrc || ""} 
                                                         alt={`Letter ${index}`} 
-                                                        className={`block h-16 w-auto object-contain 
-                                                            ${mode.title === "bigkas" && index > 3 ? "-ml-4" : "-ml-1"}
+                                                        className={`block h-14 w-auto object-contain 
+                                                            ${mode.title === "seatwork" && 
+                                                                (index > 0 && index <= 2) ? "-ml-1" 
+                                                                : mode.title === "seatwork" && (index > 2 && index <= 3) ? "-ml-3" 
+                                                                : mode.title === "bigkas" && (index > 3 && index <= 4) ? "-ml-3"
+                                                                : mode.title === "bigkas" && index > 4 ? "-ml-2"
+                                                                : "-ml-1"
+                                                            }
                                                         `}
                                                     />
                                                 ))}
@@ -178,11 +201,11 @@ const StudentHome = () => {
                     title='Right'
                     type='button'
                     onClick={nextSlide}
-                    className="absolute right-0 z-10 p-2 bg-white/70 rounded-full hover:bg-white"
+                    className="absolute right-0 z-10"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <ChevronRight size={28} />
+                    <img loading="lazy" src={imageSrc.greaterThan} alt="Right Arrow" className="size-12 object-contain" />
                 </motion.button>
             </div>
         </div>

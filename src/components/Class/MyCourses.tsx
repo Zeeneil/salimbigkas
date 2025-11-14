@@ -84,10 +84,11 @@ const MyCourses = memo(() => {
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.96 }}
           >
-            <img loading="lazy" src={imageSrc.back} alt="Back" className="size-8" />
+            <img loading="lazy" src={imageSrc.back} alt="Back" className="size-8 object-contain" />
             <div className="flex">
               {getWordImages(`back`, true).map((imageSrc, index) => (
                 <img
+                  loading="lazy"
                   key={index}
                   src={imageSrc || ""}
                   alt='back'
@@ -132,6 +133,7 @@ const MyCourses = memo(() => {
                     disabled={unit.status === true && unit.unlocked === false}
                   >
                     <img
+                      loading="lazy"
                       src={unit.imageurl}
                       alt={unit.yunitnumber}
                       className="absolute inset-0 w-full h-full object-contain z-0 opacity-50 group-hover:opacity-100 transition-opacity duration-300"

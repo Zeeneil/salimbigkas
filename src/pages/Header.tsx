@@ -37,7 +37,7 @@ const Header = ({ handleTabChange }: HeaderProps) => {
                 <motion.button
                     title="Notifications"
                     type="button"
-                    className="relative p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+                    className={`relative p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none ${role === "Student" ? "z-10" : ""}`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {

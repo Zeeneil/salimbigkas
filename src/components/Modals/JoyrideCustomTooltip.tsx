@@ -8,7 +8,7 @@ const JoyrideCustomTooltip = (props: TooltipRenderProps) => {
     
     return (
         <div className="flex-1 relative" {...tooltipProps}>
-            <img loading="lazy" src={imageSrc.robotInstruction} alt="Robot Instruction" className="absolute top-[75%] -left-20 z-10 w-30 transform -translate-y-1/2" />
+            <img loading="lazy" src={imageSrc.robotInstruction} alt="Robot Instruction" className="absolute top-[75%] -left-20 z-10 w-30 transform -translate-y-1/2 object-contain" />
             <img
                 loading="lazy"
                 src={imageSrc.blackboardMode}

@@ -8,6 +8,7 @@ import { fetchCurrentMonthActivities, getWordImages } from '../../utils/helpers'
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { imageSrc } from '../Icons/icons';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 const Notifications = () => {
     const navigate = useNavigate();
@@ -39,10 +40,11 @@ const Notifications = () => {
                     whileHover={{ scale: 1.06 }}
                     whileTap={{ scale: 0.96 }}
                 >
-                    <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10" />
+                    <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10 object-contain" />
                     <div className="flex">
                         {getWordImages(`back`, true).map((imageSrc, index) => (
                             <img
+                                loading="lazy"
                                 key={index}
                                 src={imageSrc || ""}
                                 alt='back'
@@ -67,7 +69,11 @@ const Notifications = () => {
                     }
                 </button>
             </div>
-            <div className={`flex flex-col text-left items-start justify-between p-6 rounded-lg ${role === 'Student' ? 'bg-[#FFA600] max-h-[70vh] overflow-y-auto' : 'bg-white shadow-sm border border-gray-200'}`}>
+            <OverlayScrollbarsComponent
+                options={{ scrollbars: { autoHide: "leave" } }}
+                defer
+                className={`flex flex-col text-left items-start justify-between p-6 rounded-lg ${role === 'Student' ? 'bg-[#FFA600] max-h-[70vh] overflow-y-auto' : 'bg-white shadow-sm border border-gray-200'}`}
+            >
                 <div className="w-full space-y-4">
                     {loading
                         ? <SkeletonActivity />
@@ -122,7 +128,7 @@ const Notifications = () => {
                             </div>
                     }
                 </div>
-            </div>
+            </OverlayScrollbarsComponent>
         </div>
     )
 }

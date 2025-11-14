@@ -5,7 +5,7 @@ import { auth } from "./firebase/firebase";
 import { createUserDocumentfromAuth } from "./firebase/auth";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import { classRoutes, quizRoutes, bigkasRoutes, lessonRoutes, studentLessonRoutes, allRoutes } from "./routes/Routes";
+import { classRoutes, quizRoutes, bigkasRoutes, lessonRoutes, studentLessonRoutes, allRoutes, seatworkRoutes } from "./routes/Routes";
 import TitleManager from "./routes/TitleManager";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -186,6 +186,7 @@ function App() {
             <Route path="logs" element={<LogsTab />} />
             {classRoutes({ MyCourses })}
             {lessonRoutes}
+            {seatworkRoutes}
             {quizRoutes}
             {bigkasRoutes}
             {allRoutes}
@@ -204,6 +205,7 @@ function App() {
             <Route path="students/:studentId" element={<StudentProgressTab />} />
             {classRoutes({ MyCourses })}
             {lessonRoutes}
+            {seatworkRoutes}
             {quizRoutes}
             {bigkasRoutes}
             {allRoutes}
@@ -221,6 +223,7 @@ function App() {
             <Route path="my-courses" element={<MyCourses />} />
             <Route path="my-courses/:yunitNumber/lessons" element={<StudentLessons />} />
             {studentLessonRoutes}
+            {seatworkRoutes}
             {quizRoutes}
             {bigkasRoutes}
             {allRoutes}

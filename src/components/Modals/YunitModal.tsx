@@ -201,6 +201,7 @@ const YunitModal = memo(({
               >
                 {state.imageFile || state.imageUrl ? (
                   <img
+                    loading="lazy"
                     src={state.imageFile ? URL.createObjectURL(state.imageFile) : state.imageUrl}
                     alt="Preview"
                     className="size-16 object-cover rounded shadow"

@@ -124,10 +124,11 @@ const SettingsDashboard = () => {
                             whileHover={{ scale: 1.06 }}
                             whileTap={{ scale: 0.96 }}
                         >
-                            <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10" />
+                            <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10 object-contain" />
                             <div className="flex">
                                 {getWordImages(`back`, true).map((imageSrc, index) => (
                                     <img
+                                        loading="lazy"
                                         key={index}
                                         src={imageSrc || ""}
                                         alt='back'

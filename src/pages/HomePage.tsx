@@ -129,8 +129,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="flex flex-1 h-full justify-center items-center">
-            <img loading="lazy" src={imageSrc.salimbigkas} alt="Salimbigkas Logo" className="w-full h-[450px] rotate-20" />
-            {/* <img loading="lazy" src={imageSrc.students} alt="students" className="size-100 z-20" /> */}
+            <img loading="lazy" src={imageSrc.salimbigkas} alt="Salimbigkas Logo" className="w-full h-[450px] rotate-20 object-contain" />
           </div>
         </div>
       </div>
@@ -150,7 +149,7 @@ const HomePage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <img loading="lazy" src={imageSrc.adaptiveLearning} alt="Adaptive Learning" className="h-[450px] mask-b-from-80% mask-b-to-100%" />
+              <img loading="lazy" src={imageSrc.adaptiveLearning} alt="Adaptive Learning" className="h-[450px] mask-b-from-80% mask-b-to-100% object-contain" />
               <div className="flex flex-col text-left">
                 <h2 className="mt-5 text-5xl font-bold">Adaptive Learning</h2>
                 <p className="mt-5 text-xl text-gray-500">
@@ -173,7 +172,7 @@ const HomePage = () => {
                   Lessons aligned with K-12 Filipino curriculum
                 </p>
               </div>
-              <img loading="lazy" src={imageSrc.completeLesson} alt="Complete Lesson" className="h-[400px] mask-b-from-80% mask-b-to-100%" />
+              <img loading="lazy" src={imageSrc.completeLesson} alt="Complete Lesson" className="h-[400px] mask-b-from-80% mask-b-to-100% object-contain" />
             </motion.div>
           </div>
           <div className="flex w-full py-40">
@@ -184,7 +183,7 @@ const HomePage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <img loading="lazy" src={imageSrc.achievements} alt="Achievements" className="h-96 mask-x-from-80% mask-x-to-100% mask-y-from-80% mask-y-to-100%" />
+              <img loading="lazy" src={imageSrc.achievements} alt="Achievements" className="h-96 mask-x-from-80% mask-x-to-100% mask-y-from-80% mask-y-to-100% object-contain" />
               <div className="flex flex-col text-left">
                 <h2 className="mt-5 text-5xl font-bold">Achievement Badges</h2>
                 <p className="mt-5 text-xl text-gray-500">
@@ -202,7 +201,7 @@ const HomePage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <img loading="lazy" src={imageSrc.anytime} alt="Anytime" className="h-[420px] mask-r-from-80% mask-r-to-100% mask-b-from-80% mask-b-to-100%" />
+            <img loading="lazy" src={imageSrc.anytime} alt="Anytime" className="h-[420px] mask-r-from-80% mask-r-to-100% mask-b-from-80% mask-b-to-100% object-contain" />
             <div className="flex flex-col text-left">
               <h2 className="mt-5 text-5xl font-bold">
                 Anywhere, Anytime Access
@@ -211,13 +210,13 @@ const HomePage = () => {
                 Learn via web or mobile
               </p>
             </div>
-            <img loading="lazy" src={imageSrc.anywhere} alt="Anywhere" className="h-[420px] mask-b-from-80% mask-b-to-100%" />
+            <img loading="lazy" src={imageSrc.anywhere} alt="Anywhere" className="h-[420px] mask-b-from-80% mask-b-to-100% object-contain" />
           </motion.div>
         </div>
       </div>
       <div id="contact" className="w-full py-20">
         <div className="max-w-[1440px] mx-auto flex flex-col justify-center items-center h-full">
-          <img loading="lazy" src={imageSrc.students2} alt="Students" className="h-80" />
+          <img loading="lazy" src={imageSrc.students} alt="Students" className="h-80 object-contain" />
           <h1 className="text-4xl font-bold mt-10">
             Ready to Transform Filipino Learning?
           </h1>

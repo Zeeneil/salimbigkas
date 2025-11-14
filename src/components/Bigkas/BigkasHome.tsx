@@ -79,6 +79,7 @@ const BigkasHome = memo(() => {
             >
               {getWordImages(`grade ${selectedGradeNumber}`, true).map((imageSrc, index) => (
                 <img 
+                  loading="lazy"
                   key={index} 
                   src={imageSrc || ""} 
                   alt={`Letter ${index}`} 
@@ -140,6 +141,7 @@ const BigkasHome = memo(() => {
                       >
                         {getWordImages(`grade ${gradeNumber}`, true).map((imageSrc, index) => (
                           <img 
+                            loading="lazy"
                             key={index} 
                             src={imageSrc || ""} 
                             alt={`Letter ${index}`} 
@@ -177,6 +179,7 @@ const BigkasHome = memo(() => {
               <>
                 {getWordImages("play", true).map((imageSrc, index) => (
                   <img 
+                    loading="lazy"
                     key={index} 
                     src={imageSrc || ""} 
                     alt={`Letter ${index}`} 

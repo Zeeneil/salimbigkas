@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 import { HelmetProvider } from "react-helmet-async";
 import { UsersProvider } from "./hooks/usersContext.tsx";
 import { ClassProvider } from "./hooks/classContext.tsx";
-import { QuizProvider } from "./hooks/quizContext.tsx";
+import { SeatworkQuizProvider } from "./hooks/seatworkQuizContext.tsx";
 import { BigkasProvider } from "./hooks/bigkasContext.tsx";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import "./index.css";
@@ -30,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
               <UsersProvider>
                 <LogRegProvider>
                   <ClassProvider>
-                    <QuizProvider>
+                    <SeatworkQuizProvider>
                       <BigkasProvider>
                         <OverlayScrollbarsComponent
                           options={{ scrollbars: { autoHide: "leave" } }}
@@ -53,7 +53,7 @@ createRoot(document.getElementById("root")!).render(
                           />
                         </OverlayScrollbarsComponent>
                       </BigkasProvider>
-                    </QuizProvider>
+                    </SeatworkQuizProvider>
                   </ClassProvider>
                 </LogRegProvider>
               </UsersProvider>

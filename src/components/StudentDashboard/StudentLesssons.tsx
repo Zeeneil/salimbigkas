@@ -32,10 +32,11 @@ const StudentLessons = () => {
                     whileHover={{ scale: 1.06 }}
                     whileTap={{ scale: 0.96 }}
                 >
-                    <img src={imageSrc.back} alt="Back" className="size-10" />
+                    <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10 object-contain" />
                     <div className="flex">
                     {getWordImages(`back`, true).map((imageSrc, index) => (
                         <img
+                            loading="lazy"
                             key={index}
                             src={imageSrc || ""}
                             alt='back'
@@ -72,7 +73,7 @@ const StudentLessons = () => {
                                     onClick={() => handleShowLesson(lesson)}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <img src={imageSrc.book} alt="Book" className="size-14 mr-4" />
+                                    <img loading="lazy" src={imageSrc.book} alt="Book" className="size-14 mr-4 object-contain" />
                                     <div className="flex flex-col flex-1">
                                         <div className="flex items-center gap-2">
                                             <span className={`truncate max-w-xl font-semibold text-2xl group-hover:underline`}>

@@ -158,10 +158,11 @@ const ModeSelection = memo(() => {
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.96 }}
         >
-          <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10" />
+          <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10 object-contain" />
           <div className="flex">
             {getWordImages(`back`, true).map((imageSrc, index) => (
               <img
+                loading="lazy"
                 key={index}
                 src={imageSrc || ""}
                 alt='back'
@@ -237,10 +238,11 @@ const ModeSelection = memo(() => {
                       <div className="flex gap-1 mt-2">
                         {Array.from({ length: mode.stars }, (_, starIdx) => (
                           <motion.img
+                            loading="lazy"
                             key={starIdx}
                             src={imageSrc.star}
                             alt="Star"
-                            className={`size-10 transition-transform duration-300 animate-pulse ${
+                            className={`size-10 transition-transform duration-300 animate-pulse object-contain ${
                               mode.isCompleted && hoveredIndex === idx ? 'filter brightness-25' : !mode.isUnlocked ? 'filter brightness-25' : ''
                             }`}
                             initial={{ opacity: 0, y: 10 }}
@@ -251,12 +253,12 @@ const ModeSelection = memo(() => {
                       </div>
                       {!mode.isUnlocked && (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <img loading="lazy" src={imageSrc.locked} alt="Locked" className="size-16" />
+                          <img loading="lazy" src={imageSrc.locked} alt="Locked" className="size-16 object-contain" />
                         </div>
                       )}
                       {mode.isCompleted && (
                         <div className={`absolute top-5 right-5 ${mode.isCompleted && hoveredIndex === idx ? 'filter brightness-25' : ''}`}>
-                          <img loading="lazy" src={imageSrc.check} alt="Completed" className="size-16" />
+                          <img loading="lazy" src={imageSrc.check} alt="Completed" className="size-16 object-contain" />
                         </div>
                       )}
                     </>
@@ -274,7 +276,7 @@ const ModeSelection = memo(() => {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
-                      <img loading="lazy" src={imageSrc.settings} alt="Settings" className="size-16" />
+                      <img loading="lazy" src={imageSrc.settings} alt="Settings" className="size-16 object-contain" />
                     </motion.button>
                   </div>
                 )}

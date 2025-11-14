@@ -68,20 +68,20 @@ const Blackboard = memo(({ loading, phrase, wordResults, isActive, onListen, onS
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
                                         <motion.img
-                                            loading='eager'
+                                            loading='lazy'
                                             src={!isPaused ? imageSrc.pause : imageSrc.play}
                                             title={!isPaused ? "Pause Reading" : "Continue Reading"}
                                             alt={!isPaused ? "Pause Reading" : "Continue Reading"}
-                                            className="inline size-12"
+                                            className="inline size-12 object-contain"
                                             onClick={() => { isPaused ? resume() : pause(); }}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
                                         />
                                         <motion.img
-                                            loading='eager'
+                                            loading='lazy'
                                             src={imageSrc.gameX}
                                             title="Stop Reading"
-                                            className="inline size-12"
+                                            className="inline size-12 object-contain"
                                             onClick={stop}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
@@ -106,20 +106,21 @@ const Blackboard = memo(({ loading, phrase, wordResults, isActive, onListen, onS
                                     {showSpeed && (
                                         <div className="absolute z-10 top-10 left-5 flex flex-col flex-grow w-28 gap-2 items-center bg-[#003311] border-4 border-[#8a3903] rounded-2xl p-4">
                                             <motion.img
-                                                loading="eager"
+                                                loading="lazy"
                                                 src={imageSrc.normalSpeed} 
                                                 title="Normal Speed"
                                                 alt="Normal Speed" 
-                                                className="inline size-14"
+                                                className="inline size-14 object-contain"
                                                 onClick={() => onSpeak("normal")}
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
                                             />
                                             <motion.img
+                                                loading="lazy"
                                                 src={imageSrc.slowSpeed}
                                                 title="Slow Speed"
                                                 alt="Slow Speed"
-                                                className="inline size-14"
+                                                className="inline size-14 object-contain"
                                                 onClick={() => onSpeak("slow")}
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
@@ -164,6 +165,7 @@ const Blackboard = memo(({ loading, phrase, wordResults, isActive, onListen, onS
                         >
                             {getWordImages(`bigkasin`, true).map((imageSrc, index) => (
                                 <img
+                                    loading="lazy"
                                     key={index}
                                     src={imageSrc || ""}
                                     alt='bigkasin'

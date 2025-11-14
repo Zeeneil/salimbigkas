@@ -27,6 +27,7 @@ const GameCompleted = memo(() => {
           <div className="flex">
             {getWordImages(`leaderboard`, true).map((imageSrc, index) => (
               <img
+                loading='lazy'
                 key={index}
                 src={imageSrc || ""}
                 alt='leaderboard'
@@ -53,6 +54,7 @@ const GameCompleted = memo(() => {
       >
         {getWordImages(`back`, true).map((imageSrc, index) => (
           <img
+            loading='lazy'
             key={index}
             src={imageSrc || ""}
             alt='back'
@@ -61,11 +63,13 @@ const GameCompleted = memo(() => {
         ))}
       </motion.button>
       <img
+        loading='lazy'
         src={imageSrc.tagalogChampion}
         alt="Character"
         className="absolute left-0 bottom-0 hidden md:block h-[350px] object-contain opacity-50"
       />
       <img
+        loading='lazy'
         src={imageSrc.tagalogTitan}
         alt="Character"
         className="absolute right-0 bottom-0 hidden md:block h-[350px] object-contain opacity-50"

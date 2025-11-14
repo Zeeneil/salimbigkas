@@ -128,6 +128,7 @@ const ClassGrade = () => {
                   <td className="px-6 py-4 flex items-center gap-4">
                     {member?.photoURL ? (
                       <img
+                        loading="lazy"
                         src={member?.photoURL}
                         alt={member?.displayName}
                         className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"

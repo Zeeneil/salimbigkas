@@ -21,7 +21,7 @@ const ScorePanel = memo(({ mode, phrases, currentPhrase, totalPhrases, totalPoin
 
   const renderNumberImages = (num: number, size = 50) => (
     getNumberImages(num)?.map((img, idx) => (
-      <img key={idx} src={img} alt={`Number ${num}`} className={`block h-[${size}px] object-contain`} />
+      <img loading='eager' key={idx} src={img} alt={`Number ${num}`} className={`block h-[${size}px] object-contain`} />
     ))
   );
 
@@ -31,7 +31,7 @@ const ScorePanel = memo(({ mode, phrases, currentPhrase, totalPhrases, totalPoin
         {/* Star here */}
         <div className="flex items-center justify-end w-full space-x-2 py-2">
           {getStarImages(mode).map((img, idx) => (
-            <img key={idx} src={img} alt={`Star ${idx + 1}`} className="block h-[60px] object-contain" />
+            <img loading='lazy' key={idx} src={img} alt={`Star ${idx + 1}`} className="block h-[60px] object-contain" />
           ))}
         </div>
         {/* Total Points */}
@@ -39,7 +39,7 @@ const ScorePanel = memo(({ mode, phrases, currentPhrase, totalPhrases, totalPoin
           <span className="text-lg">Puntos</span>
           <div className="flex items-center" data-joyride="scorepanel-points">
             {renderNumberImages(userTotalPoints, 60)}
-            <img loading='lazy' src={imageSrc.slash} alt="Slash" className="block h-[60px] object-contain mx-2" />
+            <img loading='eager' src={imageSrc.slash} alt="Slash" className="block h-[60px] object-contain mx-2" />
             {renderNumberImages(totalPoints, 60)}
           </div>
         </div>
@@ -48,7 +48,7 @@ const ScorePanel = memo(({ mode, phrases, currentPhrase, totalPhrases, totalPoin
           <span className="text-lg">Tamang Salita</span>
           <div className="flex items-center" data-joyride="scorepanel-words">
             {renderNumberImages(userTotalWords, 40)}
-            <img loading='lazy' src={imageSrc.slash} alt="Slash" className="block h-[40px] object-contain mx-2" />
+            <img loading='eager' src={imageSrc.slash} alt="Slash" className="block h-[40px] object-contain mx-2" />
             {renderNumberImages(totalWords, 40)}
           </div>
         </div>
@@ -70,11 +70,12 @@ const ScorePanel = memo(({ mode, phrases, currentPhrase, totalPhrases, totalPoin
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -30 }}
         >
-          <img loading='lazy' src={imageSrc.plus} alt="Plus" className="block h-[80px] object-contain" />
+          <img loading='eager' src={imageSrc.plus} alt="Plus" className="block h-[80px] object-contain" />
           {renderNumberImages(latestEarnedPoints, 80)}
         </motion.div>
       )}
       <motion.img
+        loading='lazy'
         src={isActive ? imageSrc.happyRobot : imageSrc.angryRobot}
         alt="Character"
         className="block h-[250px] object-contain"

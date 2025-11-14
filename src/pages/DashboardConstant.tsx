@@ -4,7 +4,6 @@ import {
   Calendar,
   LayoutDashboard,
   Users,
-  Mic,
   Settings,
   Bell,
   BarChart,
@@ -13,16 +12,17 @@ import {
   BookUser,
 //   NotebookText,
   UserRoundCog,
-  TestTube2,
 } from "lucide-react";
+import { imageSrc } from '../components/Icons/icons';
 
 export type AdminTab =
     | "dashboard"
     | "users"
     | "classes"
     | "pronunciation"
-    | "quizzes"
-    | "bigkas"
+    // | "seatworks"
+    // | "quizzes"
+    // | "bigkas"
     | "analytics"
     | "schedule"
     | "logs"
@@ -33,8 +33,9 @@ export const AdminNavItems: { tab: AdminTab; label: string; icon: JSX.Element }[
     { tab: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={22} /> },
     { tab: "users", label: "Users", icon: <Users size={22} /> },
     { tab: "classes", label: "Classes", icon: <BookOpen size={22} /> },
-    { tab: "quizzes", label: "Quizzes", icon: <TestTube2 size={24} /> },
-    { tab: "bigkas", label: "Bigkas", icon: <Mic size={24} /> },
+    // { tab: "seatworks", label: "Seatwork", icon: <img loading='lazy' src={imageSrc.seatworkTab} alt="Seatwork Tab" className="w-8 h-8 object-contain" /> },
+    // { tab: "quizzes", label: "Quizzes", icon: <img loading='lazy' src={imageSrc.quizTab} alt="Quizzes Tab" className="w-8 h-8 object-contain" /> },
+    // { tab: "bigkas", label: "Bigkas", icon: <img loading='lazy' src={imageSrc.bigkasTab} alt="Bigkas Tab" className="w-8 h-8 object-contain" /> },
     { tab: "analytics", label: "Analytics", icon: <BarChart size={22} /> },
     { tab: "schedule", label: "Schedule", icon: <Calendar size={22} /> },
     { tab: "logs", label: "Logs", icon: <Logs size={22} /> },
@@ -46,6 +47,7 @@ export type TeacherTab =
     | "dashboard"
     | "classes"
     | "students"
+    | "seatworks"
     | "quizzes"
     | "bigkas"
     | "schedule"
@@ -56,8 +58,9 @@ export const TeacherNavItems: { tab: TeacherTab; label: string; icon: JSX.Elemen
     { tab: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={24} /> },
     { tab: "classes", label: "My Classes", icon: <BookOpen size={24} /> },
     { tab: "students", label: "Students", icon: <Users size={24} /> },
-    { tab: "quizzes", label: "Quizzes", icon: <TestTube2 size={24} /> },
-    { tab: "bigkas", label: "Bigkas", icon: <Mic size={24} /> },
+    { tab: "seatworks", label: "Seatwork", icon: <img loading='lazy' src={imageSrc.seatworkTab} alt="Seatwork Tab" className="w-6 h-6 object-contain" /> },
+    { tab: "quizzes", label: "Quizzes", icon: <img loading='lazy' src={imageSrc.quizTab} alt="Quizzes Tab" className="w-6 h-6 object-contain" /> },
+    { tab: "bigkas", label: "Bigkas", icon: <img loading='lazy' src={imageSrc.bigkasTab} alt="Bigkas Tab" className="w-6 h-6 object-contain" /> },
     { tab: "schedule", label: "Schedule", icon: <Calendar size={24} /> },
     { tab: "settings", label: "Settings", icon: <Settings size={24} /> },
     { tab: "notifications", label: "Notifications", icon: <Bell size={24} /> },

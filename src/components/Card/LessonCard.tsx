@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import Popup from "reactjs-popup";
-import { Book, BookDashed, EllipsisVertical, SquarePen, TestTube2, NotebookPen, Archive, ArchiveRestore } from "lucide-react";
+import { BookDashed, EllipsisVertical, SquarePen, TestTube2, NotebookPen, Archive, ArchiveRestore } from "lucide-react";
 import { formatUserDate } from "../../utils/helpers";
-import { SpinLoadingColored } from "../Icons/icons";
+import { imageSrc, SpinLoadingColored } from "../Icons/icons";
 
 interface LessonCardProps {
   lesson: any;
@@ -27,9 +27,12 @@ const LessonCard = ({
   onArchiveorUnarchive,
   isLoading,
 }: LessonCardProps) => {
+  const LessonImageIcon = () => (
+    <img loading='lazy' src={imageSrc.lessonTab} alt="Published Icon" className="w-auto h-6 mr-4 object-contain" />
+  );
   const isDraft = type === "draft";
   const isArchive = type === "archived";
-  const Icon = isDraft ? BookDashed : isArchive ? Archive : Book;
+  const Icon = isDraft ? BookDashed : isArchive ? Archive : LessonImageIcon;
   const bgColor = isDraft ? "bg-yellow-50 hover:bg-yellow-100 border-l-4 border-yellow-400" : isArchive ? "bg-blue-50 hover:bg-blue-100 border-l-4 border-blue-400" : "bg-green-50 hover:bg-green-100";
   const textColor = isDraft ? "text-yellow-900" : isArchive ? "text-blue-900" : "text-green-900";
   const badgeBg = isDraft ? "bg-yellow-200 text-yellow-800 border-yellow-300" : isArchive ? "bg-blue-200 text-blue-800 border-blue-300" : "bg-green-200 text-green-800 border-green-300";
@@ -54,7 +57,7 @@ const LessonCard = ({
         onClick={() => onShow && onShow(lesson)}
         whileTap={{ scale: 0.98 }}
       >
-        <Icon className={`${iconColor} mr-4`} size={28} />
+        <Icon className={`${iconColor} w-8 h-8 mr-4`} />
         <div className="flex flex-col flex-1">
           <div className="flex items-center gap-2">
             <span className={`font-semibold text-lg ${textColor} group-hover:underline`}>

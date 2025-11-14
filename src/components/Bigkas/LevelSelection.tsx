@@ -33,10 +33,11 @@ const LevelSelection = memo(() => {
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.96 }}
         >
-          <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10" />
+          <img loading="lazy" src={imageSrc.back} alt="Back" className="size-10 object-contain" />
           <div className="flex">
             {getWordImages(`back`, true).map((imageSrc, index) => (
               <img
+                loading="lazy"
                 key={index}
                 src={imageSrc || ""}
                 alt='back'
@@ -55,6 +56,7 @@ const LevelSelection = memo(() => {
         <div className="flex items-end justify-center w-full py-6">
           {getWordImages(`Yunit ${state.selectedYunitNumber}`, true).map((imageSrc, index) => (
             <img
+              loading="lazy"
               key={index}
               src={imageSrc || ""}
               alt={`Yunit ${state.selectedYunitNumber}`}
@@ -80,7 +82,7 @@ const LevelSelection = memo(() => {
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <img loading="lazy" src={imageSrc.lessThan} alt="Less Than" className="size-16"/>
+              <img loading="lazy" src={imageSrc.lessThan} alt="Less Than" className="size-16 object-contain"/>
             </motion.button>
           </div>
         )}
@@ -124,12 +126,12 @@ const LevelSelection = memo(() => {
                     </span>
                     {!unlocked && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <img loading="lazy" src={imageSrc.locked} alt="Locked" className="size-16" />
+                        <img loading="lazy" src={imageSrc.locked} alt="Locked" className="size-16 object-contain" />
                       </div>
                     )}
                     {level.isCompleted && (
                       <div className="absolute top-10 right-10">
-                        <img loading="lazy" src={imageSrc.check} alt="Completed" className="size-16" />
+                        <img loading="lazy" src={imageSrc.check} alt="Completed" className="size-16 object-contain" />
                       </div>
                     )}
                   </button>
@@ -159,7 +161,7 @@ const LevelSelection = memo(() => {
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <img loading="lazy" src={imageSrc.greaterThan} alt="Greater Than" className="size-16" />
+              <img loading="lazy" src={imageSrc.greaterThan} alt="Greater Than" className="size-16 object-contain" />
             </motion.button>
           </div>
         )}

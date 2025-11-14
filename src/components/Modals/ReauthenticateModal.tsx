@@ -169,7 +169,7 @@ const ReauthenticateModal = ({ isOpen, onClose, email, isEm, isPw }: Reauthentic
                         loading="lazy"
                         src={imageSrc.salimbigkasPng}
                         alt="Salimbigkas Logo"
-                        className="h-12"
+                        className="h-12 object-contain"
                     />
                 </div>
             }

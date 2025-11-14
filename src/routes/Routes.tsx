@@ -4,7 +4,7 @@ const YunitLessons = lazy(() => import("../components/Class/YunitLessons"));
 const ManageMembers = lazy(() => import("../components/Class/ManageMembers"));
 const ClassGrade = lazy(() => import("../components/Class/ClassGrade"));
 const ClassAssignments = lazy(() => import("../components/Class/ClassAssignments"));
-const QuizForm = lazy(() => import("../components/Quiz/QuizForm/QuizForm"));
+const SeatworkQuizForm = lazy(() => import("../components/SeatworkQuiz/SeatworkQuizForm/SeatworkQuizForm"));
 const LessonForm = lazy(() => import("../components/Lesson/LessonForm"));
 const BigkasHome = lazy(() => import("../components/Bigkas/BigkasHome"));
 const NewLevel = lazy(() => import("../components/Bigkas/NewLevel"));
@@ -12,14 +12,16 @@ const LevelSelection = lazy(() => import("../components/Bigkas/LevelSelection"))
 const ModeSelection = lazy(() => import("../components/Bigkas/ModeSelection"));
 const PlayBigkas = lazy(() => import("../components/Bigkas/PlayBigkas"));
 const GameCompleted = lazy(() => import("../components/Bigkas/GameCompleted"));
-const Quizzes = lazy(() => import("../components/Quiz/Quizzes"));
-const QuizTake = lazy(() => import("../components/Quiz/QuizTake/QuizTake"));
-const QuizHome = lazy(() => import("../components/Quiz/QuizHome"));
+const Quizzes = lazy(() => import("../components/SeatworkQuiz/Quizzes"));
+const Seatworks = lazy(() => import("../components/SeatworkQuiz/Seatworks"));
+const SeatworkQuizTake = lazy(() => import("../components/SeatworkQuiz/SeatworkQuizTake/SeatworkQuizTake"));
+const QuizHome = lazy(() => import("../components/SeatworkQuiz/QuizHome"));
+const SeatworkHome = lazy(() => import("../components/SeatworkQuiz/SeatworkHome"));
 const AddMember = lazy(() => import("../components/Class/AddMember"));
-const QuizResult = lazy(() => import("../components/Quiz/QuizTake/QuizResult"));
+const SeatworkQuizResult = lazy(() => import("../components/SeatworkQuiz/SeatworkQuizTake/SeatworkQuizResult"));
 const SelectType = lazy(() => import("../components/Class/SelectType"));
 const ArchiveLessons = lazy(() => import("../components/Class/ArchiveLessons"));
-const QSLeaderboard = lazy(() => import("../components/Quiz/QSLeaderboard"));
+const QSLeaderboard = lazy(() => import("../components/SeatworkQuiz/QSLeaderboard"));
 const Lesson = lazy(() => import("../components/Lesson/Lesson"));
 const LessonAbout = lazy(() => import("../components/Lesson/LessonAbout"));
 const LessonFiles = lazy(() => import("../components/Lesson/LessonFiles"));
@@ -43,7 +45,7 @@ export const classRoutes = ({ MyCourses }: { MyCourses: FC }) => [
     <Route path="my-courses/:yunitNumber/lessons/add" element={<LessonForm />} />
     <Route path="my-courses/:yunitNumber/lessons/lesson/:lessonId/edit" element={<LessonForm />} />
     <Route path="my-courses/:yunitNumber/lessons/select-type" element={<SelectType />} />
-    <Route path="my-courses/:yunitNumber/lessons/quiz/add" element={<QuizForm />} />
+    <Route path="my-courses/:yunitNumber/lessons/quiz/add" element={<SeatworkQuizForm />} />
     <Route path="grades" element={<ClassGrade />} />
     <Route path="assignments" element={<ClassAssignments />} />
     <Route path="manage-students" element={<ManageMembers />} />
@@ -71,8 +73,16 @@ export const quizRoutes = [
   <Route path="quizzes" element={<QuizHome />} />,
   <Route path="leaderboard" element={<QSLeaderboard />} />,
   <Route path="quizzes/select-quiz" element={<Quizzes />} />,
-  <Route path="quizzes/:quizName/:quizId" element={<QuizTake />} />,
-  <Route path="quizzes/:quizName/:quizId/results" element={<QuizResult />} />
+  <Route path="quizzes/:quizName/:quizId" element={<SeatworkQuizTake />} />,
+  <Route path="quizzes/:quizName/:quizId/results" element={<SeatworkQuizResult />} />
+];
+
+export const seatworkRoutes = [
+  <Route path="seatworks" element={<SeatworkHome />} />,
+  <Route path="leaderboard" element={<QSLeaderboard />} />,
+  <Route path="seatworks/select-seatwork" element={<Seatworks />} />,
+  <Route path="seatworks/:seatworkName/:seatworkId" element={<SeatworkQuizTake />} />,
+  <Route path="seatworks/:seatworkName/:seatworkId/results" element={<SeatworkQuizResult />} />
 ];
 
 export const bigkasRoutes = [

@@ -2,13 +2,9 @@ import { useState } from 'react'
 import { motion } from 'framer-motion';
 import NavButton from "../components/Buttons/NavButton";
 import {
-  Home,
-  // FileText,
   LogOut,
 } from "lucide-react";
 import { imageSrc } from '../components/Icons/icons';
-// import happyRobot from "../assets/happy-robot.svg";
-// import angryRobot from "../assets/angry-robot.svg";
 import LogoutModal from '../components/Modals/LogoutModal';
 import { AdminNavItems, TeacherNavItems } from './DashboardConstant';
 import { useAuth } from '../hooks/authContext';
@@ -71,7 +67,7 @@ const SideBar = ({ activeTab, handleTabChange, role }: SideBarProps) => {
                         ))}
                         <NavButton
                             label="Home"
-                            icon={<Home size={22} />}
+                            icon={<img loading="lazy" src={imageSrc.homeTab} alt="Seatwork Tab" className="w-6 h-6 object-contain" />}
                             onClick={() => navigate("/")}
                         />
                     </nav>

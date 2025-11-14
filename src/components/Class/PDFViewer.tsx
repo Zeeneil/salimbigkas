@@ -129,20 +129,20 @@ const PDFViewer = memo(({ fileUrl }: { fileUrl: string }) => {
                   {isPlaying ? (
                     <div className="fixed z-10 top-5 right-5 flex flex-row gap-4 items-center">
                       <motion.img 
-                        loading="eager"
+                        loading="lazy"
                         src={!isPaused ? imageSrc.pause : imageSrc.play}
                         title={!isPaused ? "Pause Reading" : "Continue Reading"}
                         alt={!isPaused ? "Pause Reading" : "Continue Reading"}
-                        className="inline size-12"
+                        className="inline size-12 object-contain"
                         onClick={() => { isPaused ? resume() : pause(); }}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       />
                       <motion.img 
-                        loading="eager"
+                        loading="lazy"
                         src={imageSrc.gameX}
                         title="Stop Reading"
-                        className="inline size-10"
+                        className="inline size-10 object-contain"
                         onClick={stop}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
@@ -151,11 +151,11 @@ const PDFViewer = memo(({ fileUrl }: { fileUrl: string }) => {
                   ):(
                     <>
                       <motion.img 
-                        loading="eager"
+                        loading="lazy"
                         src={imageSrc.volume} 
                         title="Read Aloud"
                         alt="Read Aloud" 
-                        className="fixed z-10 top-5 right-5 bg-transparent inline size-12"
+                        className="fixed z-10 top-5 right-5 bg-transparent inline size-12 object-contain"
                         onClick={() => setShowSpeed(!showSpeed)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
@@ -164,21 +164,21 @@ const PDFViewer = memo(({ fileUrl }: { fileUrl: string }) => {
                       {showSpeed && (
                         <div className="fixed z-10 top-20 right-5 flex flex-col flex-grow gap-2 items-center bg-[#003311] border-4 border-[#8a3903] rounded-2xl p-4">
                           <motion.img
-                            loading="eager"
+                            loading="lazy"
                             src={imageSrc.normalSpeed} 
                             title="Normal Speed"
                             alt="Normal Speed" 
-                            className="inline size-14 bg-transparent"
+                            className="inline size-14 bg-transparent object-contain"
                             onClick={() => handleSpeak("normal")}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                           />
                           <motion.img 
-                            loading="eager"
+                            loading="lazy"
                             src={imageSrc.slowSpeed} 
                             title="Slow Speed"
                             alt="Slow Speed" 
-                            className="inline size-14 bg-transparent"
+                            className="inline size-14 bg-transparent object-contain"
                             onClick={() => handleSpeak("slow")}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
@@ -202,7 +202,7 @@ const PDFViewer = memo(({ fileUrl }: { fileUrl: string }) => {
                 whileTap={{ scale: 0.95 }}
                 data-joyride="previous-page"
               >
-                <img src={imageSrc.lessThan} alt="Previous Page" className="inline size-18" />
+                <img loading="lazy" src={imageSrc.lessThan} alt="Previous Page" className="inline size-18 object-contain" />
               </motion.button>
               <motion.button
                 type="button"
@@ -216,7 +216,7 @@ const PDFViewer = memo(({ fileUrl }: { fileUrl: string }) => {
                 whileTap={{ scale: 0.95 }}
                 data-joyride="next-page"
               >
-                <img src={imageSrc.greaterThan} alt="Next Page" className="inline size-18" />
+                <img loading="lazy" src={imageSrc.greaterThan} alt="Next Page" className="inline size-18 object-contain" />
               </motion.button>
             </div>
           </Document>
